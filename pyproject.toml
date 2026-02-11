@@ -49,6 +49,7 @@ dev = [
 
 [project.scripts]
 nanobot = "nanobot.cli.commands:app"
+nanodesk = "nanodesk.launcher:main"
 
 [build-system]
 requires = ["hatchling"]

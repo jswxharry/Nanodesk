@@ -1,0 +1,2 @@
+# Auto-resolve README conflicts during upstream sync
+README.md merge=ours
