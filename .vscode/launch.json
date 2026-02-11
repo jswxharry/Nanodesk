@@ -1,0 +1,38 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Nanodesk Agent",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "nanodesk.launcher",
+      "args": ["agent"],
+      "console": "integratedTerminal",
+      "justMyCode": false
+    },
+    {
+      "name": "Nanodesk Gateway",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "nanodesk.launcher",
+      "args": ["gateway"],
+      "console": "integratedTerminal",
+      "justMyCode": false
+    },
+    {
+      "name": "Nanodesk Onboard",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "nanodesk.launcher",
+      "args": ["onboard"],
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Current File",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${file}",
+      "console": "integratedTerminal"
+    }
+  ]
+}

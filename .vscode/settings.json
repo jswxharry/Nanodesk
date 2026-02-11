@@ -1,0 +1,39 @@
+{
+  // Python 配置
+  "python.defaultInterpreterPath": "${workspaceFolder}/.venv/Scripts/python.exe",
+  "python.analysis.typeCheckingMode": "basic",
+  "python.analysis.autoImportCompletions": true,
+  
+  // 代码格式化
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "charliermarsh.ruff",
+  "ruff.organizeImports": true,
+  
+  // 文件关联
+  "files.associations": {
+    "*.py": "python",
+    "SKILL.md": "markdown"
+  },
+  
+  // 搜索排除
+  "search.exclude": {
+    "**/.venv": true,
+    "**/__pycache__": true,
+    "**/.pytest_cache": true,
+    "**/dist": true,
+    "**/build": true,
+    "**/*.egg-info": true
+  },
+  
+  // 终端配置
+  "terminal.integrated.defaultProfile.windows": "PowerShell",
+  "terminal.integrated.profiles.windows": {
+    "PowerShell": {
+      "source": "PowerShell",
+      "args": ["-NoExit", "-Command", "Set-Location ${workspaceFolder}"]
+    }
+  },
+  
+  // 调试配置
+  "debug.internalConsoleOptions": "openOnSessionStart"
+}

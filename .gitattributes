@@ -2,3 +2,7 @@
 README.md merge=ours
 .gitignore merge=ours
 .gitattributes merge=ours
+
+# Protect VS Code and AI assistant configs
+.vscode/ merge=ours
+.kimi/ merge=ours
