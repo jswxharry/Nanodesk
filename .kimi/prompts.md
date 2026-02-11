@@ -1,5 +1,29 @@
 # Kimi Code 提示词配置
 
+## ⚠️ 关键协作规范（必须遵守）
+
+### Git 操作必须经用户确认
+
+**禁止行为**：
+- ❌ 自动 `git commit` 而不告知用户
+- ❌ 自动 `git push` 到远端
+- ❌ 批量提交未审核的改动
+
+**正确流程**：
+```
+1. AI 完成代码修改
+2. AI 展示改动内容（git diff 或文件列表）
+3. 用户审核确认
+4. AI 执行：git add → git commit → git push（如需）
+```
+
+**确认话术**：
+- "代码已修改，请审核后确认是否提交"
+- "改动内容如下，确认后我将执行 git commit"
+- "是否推送到远端 origin/nanodesk 分支？"
+
+---
+
 ## 项目上下文
 
 这是 **Nanodesk** - nanobot 的个人定制版，专为 Windows + VS Code 环境优化。
