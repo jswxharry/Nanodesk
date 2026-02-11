@@ -1,2 +1,4 @@
-# Auto-resolve README conflicts during upstream sync
+# Auto-resolve conflicts during upstream sync - keep our version
 README.md merge=ours
+.gitignore merge=ours
+.gitattributes merge=ours
