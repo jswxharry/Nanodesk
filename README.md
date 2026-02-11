@@ -1,3 +1,11 @@
+<!-- Nanodesk: 此仓库是个人定制版，详细文档见 nanodesk/README.md -->
+<div align="center" style="background:#fff3cd;padding:15px;border-radius:8px;margin-bottom:20px;border:1px solid #ffeaa7;">
+  <h1>⚠️ 这是 Nanodesk 个人定制版</h1>
+  <p>基于 nanobot 的本地桌面端定制方案</p>
+  <p><strong>📖 <a href="./nanodesk/README.md">点击查看 Nanodesk 使用文档</a></strong></p>
+  <p><small>原库文档继续往下看 ⬇️</small></p>
+</div>
+
 <div align="center">
   <img src="nanobot_logo.png" alt="nanobot" width="500">
   <h1>nanobot: Ultra-Lightweight Personal AI Assistant</h1>
