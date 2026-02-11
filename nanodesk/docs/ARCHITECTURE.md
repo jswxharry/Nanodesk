@@ -169,14 +169,108 @@ def inject():
 
 类似工具，继承 `BaseChannel`，在 `bootstrap.py` 注册。
 
+## 首次设置
+
+如果是新克隆的仓库，先添加 upstream：
+
+```bash
+# 1. 添加 upstream 远程仓库
+git remote add upstream https://github.com/HKUDS/nanobot.git
+
+# 2. 验证
+git remote -v
+# 应显示 origin（你的 fork）和 upstream（原库）
+
+# 3. 创建并切换到 nanodesk 工作分支
+git checkout -b nanodesk
+
+# 4. 推送分支到 origin
+git push -u origin nanodesk
+```
+
+## Git 配置保护
+
+为了防止同步上游时覆盖你的配置，我们在 `.gitattributes` 中设置了：
+
+```gitattributes
+README.md merge=ours
+.gitignore merge=ours
+.gitattributes merge=ours
+```
+
+这意味着同步时如果这些文件有冲突，Git 会自动保留 **你的版本**。
+
+### .gitignore 特殊处理
+
+原库有 `docs/` 会忽略所有 docs 目录，我们改为 `/docs/` 只忽略根目录：
+
+```gitignore
+/docs/          # 只忽略根目录的 docs/
+```
+
+这样 `nanodesk/docs/` 可以正常提交。
+
+**注意**：如果 upstream 有重要的 .gitignore 更新（安全相关），需要手动审查：
+```bash
+git diff upstream/main -- .gitignore
+# 手动合并需要的规则
+```
+
+## 脚本使用详解
+
+### sync-upstream.sh
+
+完整流程：
+```bash
+./nanodesk/scripts/sync-upstream.sh
+```
+
+脚本会自动：
+1. 更新 `main` 分支到最新 upstream
+2. 合并到 `nanodesk` 分支
+3. 自动解决 `README.md` 冲突（保留我们的）
+
+如果还有其他冲突：
+```bash
+# 手动解决
+git status                    # 看哪些文件冲突
+# 编辑冲突文件...
+git add .
+git commit -m "sync: resolve conflicts"
+git push origin nanodesk
+```
+
+### extract-contrib.sh
+
+从 `nanodesk` 提取干净提交：
+```bash
+./nanodesk/scripts/extract-contrib.sh <commit-hash>
+```
+
+示例：
+```bash
+# 1. 找到可贡献的 commit
+git log nanodesk --not main --oneline
+# e.g. a1b2c3d fix: handle timeout
+
+# 2. 提取
+./nanodesk/scripts/extract-contrib.sh a1b2c3d
+
+# 3. 脚本会创建 contrib/xxx 分支，然后你去 GitHub 提 PR
+```
+
 ## 注意事项
 
 1. **不要频繁修改 `nanobot/` 目录**：尽量用 monkey patch 或扩展机制
 2. **保持 `main` 分支干净**：只用于跟踪上游和提 PR
 3. **有意义的提交**：可贡献的改动用清晰 commit message，方便 cherry-pick
 4. **及时同步**：定期运行 `sync-upstream.sh`，减少冲突积累
+5. **检查 .gitignore 变更**：upstream 更新后检查是否有新的忽略规则需要同步
 
 ## 相关文档
 
+- [AI_GUIDELINES.md](./AI_GUIDELINES.md) - AI 助手指导
+- [CODE_LOCATION.md](./CODE_LOCATION.md) - 代码归属判断
+- [COMMIT_RULES.md](./COMMIT_RULES.md) - 提交信息规范
 - [nanobot AGENTS.md](../AGENTS.md) - 原库开发指南
 - [nanobot README.md](../README.md) - 原库说明
