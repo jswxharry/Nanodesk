@@ -1,10 +1,20 @@
 <!-- Nanodesk: 此仓库是个人定制版，详细文档见 nanodesk/README.md -->
-<div align="center" style="background:#fff3cd;padding:15px;border-radius:8px;margin-bottom:20px;border:1px solid #ffeaa7;">
-  <h1>⚠️ 这是 Nanodesk 个人定制版</h1>
-  <p>基于 nanobot 的本地桌面端定制方案</p>
-  <p><strong>📖 <a href="./nanodesk/README.md">点击查看 Nanodesk 使用文档</a></strong></p>
-  <p><small>原库文档继续往下看 ⬇️</small></p>
+<div align="center">
+  <img src="nanodesk/nanodesk_logo.jpg" alt="Nanodesk" width="400">
+  
+  <blockquote style="font-size: 1.2em; color: #586069; margin: 20px 0; padding: 15px 20px; background: #f6f8fa; border-left: 4px solid #0366d6;">
+    🐹 <strong>常驻桌面的自我进化豚鼠军团，静默并行，愈战愈勇。</strong><br>
+    <em>A self-evolving guinea pig legion permanently on your desktop, operating in silent parallel.</em>
+  </blockquote>
+  
+  <p>
+    <strong>Nanodesk</strong> — 基于 nanobot 的本地桌面端定制方案
+    <br>
+    <small>📖 <a href="./nanodesk/README.md">点击查看 Nanodesk 使用文档</a> | 原库文档继续往下看 ⬇️</small>
+  </p>
 </div>
+
+---
 
 <div align="center">
   <img src="nanobot_logo.png" alt="nanobot" width="500">
