@@ -3,6 +3,7 @@
 *.pyc
 dist/
 build/
+build_desktop/
 /docs/
 *.egg-info/
 *.egg
@@ -20,3 +21,10 @@ poetry.lock
 tests/
 botpy.log
 AGENTS.md
+
+# PyInstaller
+*.spec
+
+# Desktop build artifacts
+Nanodesk.exe
+Nanodesk-Setup-*.exe
