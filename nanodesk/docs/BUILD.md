@@ -8,6 +8,24 @@ Nanodesk Desktop uses a dual-mode architecture:
 - **Development mode**: Uses your system Python with installed dependencies
 - **Production mode**: Uses embedded Python bundled with the application
 
+### Quick Start (Development)
+
+```powershell
+# Install dependencies
+pip install -e .
+pip install -r nanodesk/desktop/requirements.txt
+
+# Run desktop app (with UTF-8 encoding)
+.\nanodesk\scripts\run_desktop.ps1
+
+# Or manually with UTF-8 env vars
+$env:PYTHONIOENCODING="utf-8"
+$env:PYTHONUTF8="1"
+python -m nanodesk.desktop.main
+```
+
+> **Note**: Windows console uses GBK encoding by default. The `run_desktop.ps1` script automatically sets UTF-8 environment variables to prevent UnicodeEncodeError.
+
 ## Prerequisites
 
 - Windows 10/11
@@ -89,6 +107,15 @@ The Inno Setup script creates a professional installer:
 - Auto-start option
 - Clean uninstall
 
+## Helper Scripts
+
+| Script | Purpose |
+|--------|---------|
+| `run_desktop.ps1` | Run desktop app in development mode (sets UTF-8 encoding) |
+| `kill_all.ps1` | Force kill all Nanodesk processes (useful when stuck) |
+| `build_all.ps1` | One-click build with embedded Python |
+| `release.ps1` | Version release (bump version + create git tag) |
+
 ## Troubleshooting
 
 ### Build Issues
@@ -101,12 +128,19 @@ pip install pyinstaller
 **Missing dependencies:**
 ```powershell
 pip install -e .
+pip install -r nanodesk/desktop/requirements.txt
 ```
 
 **Clean build:**
 ```powershell
 Remove-Item build_desktop, build, dist -Recurse -Force
 .\nanodesk\scripts\build_all.ps1 -Clean
+```
+
+**Force kill all processes:**
+```powershell
+# If Gateway is stuck or app won't close
+.\nanodesk\scripts\kill_all.ps1
 ```
 
 ### Runtime Issues

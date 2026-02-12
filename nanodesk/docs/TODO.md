@@ -102,11 +102,14 @@ python -c "import zipfile, os; zf = zipfile.ZipFile('Nanodesk-Portable.zip', 'w'
 ## 快速参考
 
 ```powershell
+# 启动桌面应用（开发模式，自动 UTF-8）
+.\nanodesk\scripts\run_desktop.ps1
+
 # 启动 Gateway（开发模式）
 nanodesk gateway --verbose
 
-# 启动桌面应用（开发模式）
-python -m nanodesk.desktop.main
+# 强制关闭所有 Nanodesk 进程
+.\nanodesk\scripts\kill_all.ps1
 
 # 同步上游
 .\nanodesk\scripts\sync-upstream.ps1
@@ -116,12 +119,23 @@ python -m nanodesk.desktop.main
 直接发消息      # 私聊
 ```
 
+### 开发辅助脚本
+
+| 脚本 | 用途 |
+|------|------|
+| `run_desktop.ps1` | 启动桌面应用（自动设置 UTF-8 编码） |
+| `kill_all.ps1` | 强制结束所有 Nanodesk 相关进程 |
+| `build_all.ps1` | 一键打包桌面版（含嵌入 Python） |
+| `release.ps1` | 版本发布（更新版本号 + 创建标签） |
+
 **文档索引**: 
-- [BUILD.md](./BUILD.md) - 桌面应用构建指南
-- [DESKTOP_APP_PLAN.md](./DESKTOP_APP_PLAN.md) - 桌面开发计划
+- [BUILD.md](./BUILD.md) - 桌面应用构建和打包指南
+- [DESKTOP_APP_PLAN.md](./DESKTOP_APP_PLAN.md) - 桌面应用开发计划（Phase 1 & 2 已完成）
+- [VERSIONING.md](./VERSIONING.md) - 版本管理和发布流程
 - [UPSTREAM_PRS.md](./UPSTREAM_PRS.md) - 上游 PR 跟踪
 - [FEISHU_SETUP.md](./FEISHU_SETUP.md) - 飞书配置指南
 - [ARCHITECTURE.md](./ARCHITECTURE.md) - 项目架构
+- [AI_COLLABORATION.md](./AI_COLLABORATION.md) - AI 协作指南
 
 ---
 
@@ -129,6 +143,10 @@ python -m nanodesk.desktop.main
 
 | 日期 | 内容 |
 |------|------|
+| 2026-02-12 | 系统托盘修复（图标、菜单、GC 问题）|
+| 2026-02-12 | 添加辅助脚本（run_desktop.ps1, kill_all.ps1, release.ps1）|
+| 2026-02-12 | 应用退出时自动停止 Gateway |
+| 2026-02-12 | 版本管理（v0.2.0）和版本显示 |
 | 2026-02-12 | Windows 桌面应用 Phase 1 & 2 完成，支持嵌入 Python 打包 |
 | 2026-02-12 | 同步上游改进（edit_file、CoT、at 参数、时区）|
 | 2026-02-12 | 创建待办事项文档 |

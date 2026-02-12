@@ -199,7 +199,8 @@ ToolRegistry.register(MyTool())
 ## 文档
 
 - [桌面应用构建指南](./docs/BUILD.md) - 桌面版打包和分发完整指南
-- [桌面应用开发计划](./docs/DESKTOP_APP_PLAN.md) - Phase 1/2 开发规划
+- [桌面应用开发计划](./docs/DESKTOP_APP_PLAN.md) - Phase 1/2 开发规划（已完成）
+- [版本管理](./docs/VERSIONING.md) - 版本号管理和发布流程
 - [架构设计](./docs/ARCHITECTURE.md) - 项目结构和 Git 工作流
 - [AI 协作指南](./docs/AI_COLLABORATION.md) - Git 工作流和提交规范
 - [飞书配置](./docs/FEISHU_SETUP.md) - 飞书机器人完整配置指南
@@ -207,6 +208,7 @@ ToolRegistry.register(MyTool())
 - [语言策略](./docs/LANGUAGE_POLICY.md) - 代码注释语言规范
 - [Windows 开发](./docs/WINDOWS_DEV.md) - Windows 环境开发指南
 - [配置指南](./docs/CONFIGURATION.md) - 初始化配置说明
+- [待办事项](./docs/TODO.md) - 功能跟踪和开发计划
 
 ## 更新记录
 
