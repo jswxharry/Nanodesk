@@ -54,6 +54,8 @@
 - 灰色地带决策流程图
 - 具体代码示例
 
+复杂代码归属判断详情参见 [CODE_LOCATION.md](./CODE_LOCATION.md)。
+
 **快速原则**：
 - ✅ `nanobot/` - Bug 修复、通用功能、性能优化、文档改进
 - ✅ `nanodesk/` - Windows 特定功能、个人工作流、实验性代码、私有业务逻辑
@@ -232,6 +234,9 @@ def process(text: str | None) -> list[str]:
 
 ## 九、参考
 
+- [ARCHITECTURE.md](./ARCHITECTURE.md) - 项目架构和 Git 工作流
+- [CODE_LOCATION.md](./CODE_LOCATION.md) - 代码归属详细判断标准
+- [COMMIT_RULES.md](./COMMIT_RULES.md) - 提交信息规范
 - [nanobot AGENTS.md](../AGENTS.md) - 原库开发指南
 - [nanobot README.md](../README.md) - 原库说明
 

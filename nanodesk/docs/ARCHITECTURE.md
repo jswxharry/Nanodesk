@@ -80,8 +80,9 @@ nanodesk/
 ├── patches/                 # 必要时的补丁记录
 │   └── README.md
 ├── scripts/                 # 辅助脚本
-│   ├── sync-upstream.sh     # 同步上游
-│   └── extract-contrib.sh   # 提取可贡献代码
+│   ├── sync-upstream.sh/.ps1    # 同步上游（Bash/PowerShell）
+│   ├── extract-contrib.sh/.ps1  # 提取可贡献代码（Bash/PowerShell）
+│   └── init-venv.ps1            # 初始化虚拟环境（Windows）
 └── docs/                    # 文档
     └── ARCHITECTURE.md      # 本文件
 ```
@@ -280,7 +281,7 @@ git log nanodesk --not main --oneline
 
 ## 相关文档
 
-- [AI_GUIDELINES.md](./AI_GUIDELINES.md) - AI 助手指导
+- [AI_COLLABORATION.md](./AI_COLLABORATION.md) - AI 协作指南
 - [CODE_LOCATION.md](./CODE_LOCATION.md) - 代码归属判断
 - [COMMIT_RULES.md](./COMMIT_RULES.md) - 提交信息规范
 - [nanobot AGENTS.md](../AGENTS.md) - 原库开发指南

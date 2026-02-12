@@ -13,7 +13,7 @@
 - [x] 配置 VS Code 开发环境（`.vscode/`）
 - [x] 配置 Kimi Code 提示词（`.kimi/prompts.md`）
 - [x] 编写 Windows PowerShell 脚本（sync-upstream, extract-contrib, init-venv）
-- [x] 完善文档体系（8个文档）
+- [x] 完善文档体系（9个文档）
 
 ### 通讯频道
 - [x] 飞书（Feishu）通道配置完成

@@ -231,7 +231,7 @@ Ctrl+Shift+P → Kimi: Init Context
 
 Kimi 会读取：
 - `.kimi/prompts.md` - 项目特定提示词
-- `nanodesk/docs/AI_GUIDELINES.md` - 代码归属决策
+- `nanodesk/docs/AI_COLLABORATION.md` - AI 协作指南和代码归属决策
 - `AGENTS.md` - 项目结构
 
 #### 常用 Kimi 指令
@@ -332,7 +332,7 @@ import pdb; pdb.set_trace()
 | `nanodesk/launcher.py` | 启动入口 | `Ctrl+P` → launcher |
 | `pyproject.toml` | 依赖配置 | `Ctrl+P` → pyproject |
 | `~/.nanobot/config.json` | 运行配置 | 外部文件 |
-| `nanodesk/docs/AI_GUIDELINES.md` | AI 指导 | `Ctrl+P` → AI_GUIDE |
+| `nanodesk/docs/AI_COLLABORATION.md` | AI 协作指南 | `Ctrl+P` → AI_COLL |
 
 ### 9. 常见问题
 
@@ -361,7 +361,7 @@ pip install -e .
 **Q: Kimi 不了解项目结构**
 ```
 1. 使用 /init 刷新上下文
-2. 或手动打开 nanodesk/docs/AI_GUIDELINES.md 让 Kimi 阅读
+2. 或手动打开 nanodesk/docs/AI_COLLABORATION.md 让 Kimi 阅读
 3. 确保 .kimi/prompts.md 已提交到 git
 ```
 
