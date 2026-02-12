@@ -37,6 +37,10 @@ class SystemTray(QSystemTrayIcon):
     open_settings = Signal()
     quit_app = Signal()
     
+    # Keep references to prevent garbage collection
+    _menu = None
+    _actions = []
+    
     def __init__(self, parent=None):
         super().__init__(parent)
         
@@ -62,45 +66,44 @@ class SystemTray(QSystemTrayIcon):
     
     def _build_menu(self):
         """Build context menu."""
-        menu = QMenu()
+        self._menu = QMenu()
+        self._actions = []  # Clear old references
+        
+        def add_action(text, signal=None, enabled=True):
+            """Helper to create action and keep reference."""
+            action = QAction(text)
+            action.setEnabled(enabled)
+            if signal:
+                action.triggered.connect(signal)
+            self._menu.addAction(action)
+            self._actions.append(action)
+            return action
         
         # Title/status (non-clickable)
-        self._status_action = QAction("🛑 Stopped")
-        self._status_action.setEnabled(False)
-        menu.addAction(self._status_action)
+        self._status_action = add_action("🛑 Stopped", enabled=False)
         
-        menu.addSeparator()
+        self._menu.addSeparator()
         
         # Toggle gateway
-        self._toggle_action = QAction("▶ 启动 Gateway")
-        self._toggle_action.triggered.connect(self.toggle_gateway.emit)
-        menu.addAction(self._toggle_action)
+        self._toggle_action = add_action("▶ 启动 Gateway", self.toggle_gateway.emit)
         
-        menu.addSeparator()
+        self._menu.addSeparator()
         
         # Show window
-        show_action = QAction("打开主窗口")
-        show_action.triggered.connect(self.show_window.emit)
-        menu.addAction(show_action)
+        add_action("打开主窗口", self.show_window.emit)
         
         # View logs
-        logs_action = QAction("查看日志")
-        logs_action.triggered.connect(self.view_logs.emit)
-        menu.addAction(logs_action)
+        add_action("查看日志", self.view_logs.emit)
         
         # Settings
-        settings_action = QAction("重新配置...")
-        settings_action.triggered.connect(self.open_settings.emit)
-        menu.addAction(settings_action)
+        add_action("重新配置...", self.open_settings.emit)
         
-        menu.addSeparator()
+        self._menu.addSeparator()
         
         # Quit
-        quit_action = QAction("退出")
-        quit_action.triggered.connect(self.quit_app.emit)
-        menu.addAction(quit_action)
+        add_action("退出", self.quit_app.emit)
         
-        self.setContextMenu(menu)
+        self.setContextMenu(self._menu)
     
     def update_status(self, is_running: bool):
         """Update tray icon and menu based on status."""
