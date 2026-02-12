@@ -96,10 +96,31 @@ ToolRegistry.register(MyTool())
 | `main` | 跟踪上游，用于提 PR，不直接开发 |
 | `nanodesk` | 主工作分支，包含你的所有定制 |
 
+## 已验证功能
+
+### 通讯频道
+
+| 频道 | 状态 | 文档 |
+|------|------|------|
+| 飞书 (Feishu) | ✅ 已验证 | [配置指南](./docs/FEISHU_SETUP.md) |
+
+### 开发工具
+
+| 功能 | 状态 | 说明 |
+|------|------|------|
+| 上游同步脚本 | ✅ 已验证 | `./scripts/sync-upstream.ps1` 或 `.sh` |
+| VS Code 调试 | ✅ 已验证 | F5 直接启动调试 |
+| 代码格式化 | ✅ 已验证 | Ruff 自动格式化 |
+
 ## 文档
 
 - [架构设计](./docs/ARCHITECTURE.md) - 项目结构和 Git 工作流
-- 更多文档...
+- [AI 协作指南](./docs/AI_COLLABORATION.md) - Git 工作流和提交规范
+- [飞书配置](./docs/FEISHU_SETUP.md) - 飞书机器人完整配置指南
+- [上游同步](./docs/SYNC_WORKFLOW.md) - 同步上游更新流程
+- [语言策略](./docs/LANGUAGE_POLICY.md) - 代码注释语言规范
+- [Windows 开发](./docs/WINDOWS_DEV.md) - Windows 环境开发指南
+- [配置指南](./docs/CONFIGURATION.md) - 初始化配置说明
 
 ## License
 

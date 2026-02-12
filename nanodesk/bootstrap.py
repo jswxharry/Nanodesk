@@ -17,7 +17,7 @@ def inject():
     if str(root) not in sys.path:
         sys.path.insert(0, str(root))
     
-    print("🔧 Loading Nanodesk customization...")
+    print("[INFO] Loading Nanodesk customization...")
     
     # TODO: 在这里注册你的扩展
     # 示例：
@@ -26,4 +26,4 @@ def inject():
     # register_tools()
     # register_channels()
     
-    print("✅ Nanodesk customization loaded")
+    print("[INFO] Nanodesk customization loaded")
