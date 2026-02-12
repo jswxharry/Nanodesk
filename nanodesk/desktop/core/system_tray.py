@@ -40,18 +40,25 @@ class SystemTray(QSystemTrayIcon):
     def __init__(self, parent=None):
         super().__init__(parent)
         
-        # Set icon
-        icon_path = _get_icon_path()
-        self.setIcon(QIcon(icon_path))
-        
         # Set tooltip
         self.setToolTip("Nanodesk - Stopped")
         
-        # Build menu
+        # Build menu first
         self._build_menu()
+        
+        # Set icon (after menu is built)
+        icon_path = _get_icon_path()
+        if Path(icon_path).exists():
+            self.setIcon(QIcon(icon_path))
+        else:
+            # Use default icon if logo.ico not found
+            self.setIcon(QIcon.fromTheme("application-x-executable"))
         
         # Connect activated signal (click on icon)
         self.activated.connect(self._on_activated)
+        
+        # Ensure menu is accessible
+        self.setVisible(True)
     
     def _build_menu(self):
         """Build context menu."""
