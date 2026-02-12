@@ -1,8 +1,30 @@
 """System tray icon and menu."""
 
+from pathlib import Path
+
 from PySide6.QtCore import Signal
 from PySide6.QtGui import QAction, QIcon
 from PySide6.QtWidgets import QMenu, QSystemTrayIcon
+
+
+def _get_icon_path() -> str:
+    """Get the path to the application icon."""
+    # Try multiple locations
+    possible_paths = [
+        # Development: relative to this file
+        Path(__file__).parent.parent / "resources" / "icons" / "logo.ico",
+        # Packaged: relative to executable
+        Path(__file__).parent.parent.parent.parent / "resources" / "icons" / "logo.ico",
+        # PyInstaller: _internal folder
+        Path(__file__).parent.parent / "_internal" / "resources" / "icons" / "logo.ico",
+    ]
+    
+    for path in possible_paths:
+        if path.exists():
+            return str(path)
+    
+    # Fallback: return first path even if not exists (will show default icon)
+    return str(possible_paths[0])
 
 
 class SystemTray(QSystemTrayIcon):
@@ -17,6 +39,10 @@ class SystemTray(QSystemTrayIcon):
     
     def __init__(self, parent=None):
         super().__init__(parent)
+        
+        # Set icon
+        icon_path = _get_icon_path()
+        self.setIcon(QIcon(icon_path))
         
         # Set tooltip
         self.setToolTip("Nanodesk - Stopped")
