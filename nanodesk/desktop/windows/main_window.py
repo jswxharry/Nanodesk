@@ -10,6 +10,7 @@ from PySide6.QtWidgets import (
     QDialog, QTextEdit, QDialogButtonBox, QListWidget
 )
 
+from nanodesk.desktop import __version__
 from nanodesk.desktop.core.config_manager import get_config_manager
 from nanodesk.desktop.core.process_manager import get_process_manager
 from nanodesk.desktop.core.log_handler import get_log_handler
@@ -139,7 +140,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         
-        self.setWindowTitle("Nanodesk Desktop")
+        self.setWindowTitle(f"Nanodesk Desktop v{__version__}")
         self.resize(600, 500)
         self.setMinimumSize(500, 400)
         
@@ -245,6 +246,11 @@ class MainWindow(QMainWindow):
         self.status_bar = QStatusBar()
         self.setStatusBar(self.status_bar)
         self.status_bar.showMessage("就绪")
+        
+        # Version label in status bar (right side)
+        version_label = QLabel(f"v{__version__}")
+        version_label.setStyleSheet("color: gray; padding: 0 10px;")
+        self.status_bar.addPermanentWidget(version_label)
         
         central.setLayout(layout)
     
