@@ -275,7 +275,7 @@ class MainWindow(QMainWindow):
         self.tray.toggle_gateway.connect(self._on_toggle_gateway)
         self.tray.view_logs.connect(self._view_logs)
         self.tray.open_settings.connect(self._open_settings)
-        self.tray.quit_app.connect(self._on_quit)
+        self.tray.quit_app.connect(self.force_quit)
         
         # Process manager signals
         self.process_manager.status_changed.connect(self._on_status_changed)
@@ -378,19 +378,33 @@ class MainWindow(QMainWindow):
         """Quit application."""
         # Stop gateway if running
         if self.process_manager.is_running:
-            import asyncio
-            asyncio.create_task(self.process_manager.stop_gateway())
+            self.status_bar.showMessage("正在停止 Gateway...")
+            self.process_manager.stop_gateway()
         
         from PySide6.QtWidgets import QApplication
         QApplication.quit()
     
     def closeEvent(self, event):
-        """Handle close event - minimize to tray instead."""
+        """Handle close event - minimize to tray instead of closing."""
         event.ignore()
         self.hide()
         self.tray.showMessage(
             "Nanodesk",
-            "程序已最小化到系统托盘",
+            "程序已最小化到系统托盘，右键托盘图标可退出",
             SystemTray.MessageIcon.Information,
             2000
         )
+    
+    def force_quit(self):
+        """Force quit application - called when user selects 'Exit' from tray menu."""
+        # Stop gateway if running
+        if self.process_manager.is_running:
+            self._log_handler.write("Stopping Gateway before exit...", "INFO")
+            self.process_manager.stop_gateway()
+        
+        # Hide tray icon
+        self.tray.hide()
+        
+        # Accept close event and quit
+        from PySide6.QtWidgets import QApplication
+        QApplication.quit()
