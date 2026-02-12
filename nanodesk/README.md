@@ -17,21 +17,35 @@ Nanodesk 基于 [nanobot](https://github.com/HKUDS/nanobot) 构建，保留了�
 
 ### 方式一：Windows 桌面版（推荐）
 
-下载便携版，解压即用，无需安装 Python！
+#### 选项 A：自行打包（推荐）
+
+克隆代码后一键打包，解压即用，无需安装 Python！
 
 ```powershell
-# 下载地址（GitHub Releases）
-# https://github.com/jswxharry/Nanodesk/releases
+# 克隆仓库
+git clone https://github.com/jswxharry/Nanodesk.git
+cd Nanodesk
 
-# 或使用打包脚本自行构建
-.\nanodesk\scripts\build_all.ps1
+# 一键打包（包含嵌入 Python）
+.\nanodesk\scripts\build_all.ps1 -Clean
+
+# 输出：dist/Nanodesk/ 文件夹
 ```
 
 **使用步骤：**
-1. 下载 `Nanodesk-Portable.zip` 并解压
+1. 打包完成后，进入 `dist/Nanodesk/` 文件夹
 2. 运行 `Nanodesk.exe`
 3. 首次启动会自动弹出配置向导
 4. 配置完成后点击「启动 Gateway」即可使用
+
+#### 选项 B：直接运行（开发者）
+
+如果你有 Python 环境，可以直接运行桌面版：
+
+```powershell
+pip install -e .
+python -m nanodesk.desktop.main
+```
 
 ### 方式二：命令行版（开发者）
 
