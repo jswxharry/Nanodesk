@@ -2,7 +2,7 @@
 
 > 记录版本发布历史和功能变更
 > 
-> 最后更新：2026-02-13
+> 最后更新：2026-02-14
 
 ---
 
@@ -48,6 +48,21 @@
 ### 测试
 
 - AI 自动化测试：通过（85.7%）
+
+---
+
+## [v0.2.2-dev] - 2026-02-14
+
+### 理念调整
+
+- **核心理念**: 从"轻量框架"调整为"实用个人助手"
+- **原则**: Practicality first, lightweight second（实用优先，轻量为辅）
+- **目标**: 开箱即用，保持代码可控
+- **记录**: [discussion/2026-02-14-core-philosophy-and-features.md](./discussion/2026-02-14-core-philosophy-and-features.md)
+
+### 设计文档
+
+- 工具执行即时反馈、关屏保持运行、搜索强化等 5 个设计提案
 - 手动测试：核心功能全部通过
 - 测试报告：[test-report-20260213-final.md](./testing/reports/test-report-20260213-final.md)
 

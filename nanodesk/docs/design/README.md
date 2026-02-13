@@ -12,6 +12,7 @@
 | [TOOL_EXECUTION_FEEDBACK.md](./TOOL_EXECUTION_FEEDBACK.md) | 📝 设计阶段 | 高 | 工具执行即时反馈改进（解决用户焦虑） |
 | [PREVENT_SLEEP_KEEP_RUNNING.md](./PREVENT_SLEEP_KEEP_RUNNING.md) | 📝 设计阶段 | 高 | 屏幕关闭但保持运行（电源管理） |
 | [CONTEXT_SIZE_DISPLAY.md](./CONTEXT_SIZE_DISPLAY.md) | 📝 设计阶段 | 低-中 | 对话上下文大小显示（token 计数） |
+| [SEARCH_ENHANCEMENT.md](./SEARCH_ENHANCEMENT.md) | 📝 设计阶段 | 低-中 | 搜索能力强化（无需 API Key 方案） |
 
 ---
 
