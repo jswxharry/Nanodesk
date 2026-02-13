@@ -14,6 +14,7 @@
 
 | 优先级 | 功能 | 状态 | 来源 | 备注 |
 |--------|------|------|------|------|
+| ⭐⭐⭐ | **本地知识检索** | 🔴 待设计 | [discussion/2026-02-14-core-philosophy-and-features.md](./discussion/2026-02-14-core-philosophy-and-features.md) | 最痛的点：Agent 无法回答"我之前说过什么" |
 | ⭐⭐⭐ | **工具执行即时反馈** | 📝 设计完成 | [TOOL_EXECUTION_FEEDBACK.md](./design/TOOL_EXECUTION_FEEDBACK.md) | 解决"执行后无响应"的 UX 问题 |
 | ⭐⭐⭐ | **关屏保持运行** | 📝 设计完成 | [PREVENT_SLEEP_KEEP_RUNNING.md](./design/PREVENT_SLEEP_KEEP_RUNNING.md) | Windows 电源管理，关屏后 Agent 继续运行 |
 | ⭐⭐ | Windows 截图工具 | 📋 待开发 | - | 飞书指令截图 |
