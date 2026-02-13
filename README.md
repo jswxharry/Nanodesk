@@ -30,9 +30,11 @@
   </p>
 </div>
 
-🐈 **nanobot** is an **ultra-lightweight** personal AI assistant inspired by [OpenClaw](https://github.com/openclaw/openclaw) 
+🐈 **nanobot** is a **practical** personal AI assistant inspired by [OpenClaw](https://github.com/openclaw/openclaw) 
 
-⚡️ Delivers core agent functionality in just **~4,000** lines of code — **99% smaller** than Clawdbot's 430k+ lines.
+> **Philosophy**: *Practicality first, lightweight second.* We prioritize features you'll use daily over feature bloat.
+
+⚡️ Delivers essential agent functionality in **~4,000** lines of readable code — small enough to understand, complete enough to be useful.
 
 📏 Real-time line count: **3,582 lines** (run `bash core_agent_lines.sh` to verify anytime)
 
