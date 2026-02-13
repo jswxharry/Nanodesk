@@ -63,6 +63,10 @@ nanodesk/
 ├── providers/               # LLM 适配
 ├── patches/                 # 必要时的补丁记录
 ├── scripts/                 # 辅助脚本
+│   ├── build/              # 构建和打包脚本
+│   ├── dev/                # 开发和测试脚本
+│   ├── git/                # Git 工作流脚本
+│   └── release/            # 发布脚本
 └── docs/                    # 文档
 ```
 

@@ -43,7 +43,7 @@ nanodesk/ 目录 →  你的定制  →  同步时不触碰
 
 ```bash
 # 一键同步（推荐）
-./nanodesk/scripts/sync-upstream.ps1
+./nanodesk/scripts/git/sync-upstream.ps1
 
 # 手动同步
 # 1. 获取上游更新

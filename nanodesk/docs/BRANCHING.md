@@ -207,7 +207,7 @@ git branch --merged | grep -v "\*" | grep -v "main\|nanodesk\|develop" | xargs -
 git remote prune origin
 
 # 同步上游（main 分支）
-./nanodesk/scripts/sync-upstream.ps1
+./nanodesk/scripts/git/sync-upstream.ps1
 ```
 
 ---

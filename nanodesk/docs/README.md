@@ -22,6 +22,15 @@
 | [CHANGELOG.md](./CHANGELOG.md) | 版本发布历史 |
 | [UPSTREAM_PRS.md](./UPSTREAM_PRS.md) | 上游 PR 跟踪与评估 |
 
+## 🧪 测试文档
+
+| 文档 | 说明 |
+|------|------|
+| [testing/README.md](./testing/README.md) | 测试文档索引 |
+| [testing/TEST_PLAN.md](./testing/TEST_PLAN.md) | 测试策略和计划 |
+| [testing/AI_CHECKLIST.md](./testing/AI_CHECKLIST.md) | AI 开发检查清单 |
+| [testing/MANUAL_CHECKLIST.md](./testing/MANUAL_CHECKLIST.md) | 人工验证检查清单 |
+
 ---
 
 ## 🔧 开发指南
@@ -47,9 +56,10 @@
 
 | 类型 | 数量 |
 |------|------|
-| 活跃文档 | 13 篇 |
+| 活跃文档 | 14 篇 |
 | 归档文档 | 1 篇 |
-| 总计 | 14 篇 |
+| 测试文档 | 6 篇 |
+| 总计 | 21 篇 |
 
 ---
 
