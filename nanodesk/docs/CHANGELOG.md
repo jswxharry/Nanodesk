@@ -10,9 +10,9 @@
 
 ### 新增功能
 
-- **搜索工具** (🧪 待测试)
+- **搜索工具** ✅
   - `ddg_search` - DuckDuckGo 搜索（无需 API Key）
-  - `browser_search` - 浏览器搜索（Playwright，支持 Google/Bing/DuckDuckGo）
+  - `browser_search` - 浏览器搜索（Playwright，需手动安装）
   - `browser_fetch` - 浏览器页面抓取（支持 JS 渲染）
 
 - **Git 分支管理**
@@ -21,6 +21,10 @@
   - 建立 `feature → develop → nanodesk` 工作流
   - 添加 [BRANCHING.md](./BRANCHING.md) 分支管理规范
 
+- **自动化测试**
+  - `run_tests.ps1` - 完整测试套件
+  - `run_tests_quick.ps1` - 快速测试（CI/CD）
+
 ### 上游同步（v0.1.3.post7）
 
 - **内存系统 v2** - 双层架构（热/冷内存）+ grep 检索
@@ -28,10 +32,24 @@
 - **飞书修复** - 卡片消息 Markdown 标题转 div 元素
 - **WhatsApp 安全** - Bridge 绑定 localhost，添加可选 Token 认证
 
+### 修复
+
+- 退出时崩溃（`_log_handler` 拼写错误）
+- `ddg_search` 包名变更（`duckduckgo-search` → `ddgs`）
+
 ### 文档更新
 
 - 新增 [BRANCHING.md](./BRANCHING.md) - Git 分支管理规范
-- 更新 [UPSTREAM_PRS.md](./UPSTREAM_PRS.md) - 添加 v0.1.3.post7 同步记录
+- 新增 [CONTRIBUTING.md](./CONTRIBUTING.md) - 开发者指南
+- 新增 [testing/](./testing/) - 测试文档套件
+- 精简 WINDOWS_DEV.md、SYNC_WORKFLOW.md 等 5 篇文档（-732 行）
+- 脚本分类整理为 build/dev/git/release 四个目录
+
+### 测试
+
+- AI 自动化测试：通过（85.7%）
+- 手动测试：核心功能全部通过
+- 测试报告：[test-report-20260213-final.md](./testing/reports/test-report-20260213-final.md)
 
 ---
 
