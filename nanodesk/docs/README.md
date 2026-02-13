@@ -11,6 +11,7 @@
 | [BUILD.md](./BUILD.md) | 构建 Windows 桌面应用（含嵌入 Python 打包）|
 | [CONFIGURATION.md](./CONFIGURATION.md) | 配置指南（手动配置 + 桌面应用配置参考）|
 | [FEISHU_SETUP.md](./FEISHU_SETUP.md) | 飞书机器人完整配置指南 |
+| [WINDOWS_LONG_RUNNING.md](./WINDOWS_LONG_RUNNING.md) | Windows 长时间运行配置（解决睡眠断连问题） |
 
 ---
 
