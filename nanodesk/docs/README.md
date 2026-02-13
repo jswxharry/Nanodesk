@@ -22,6 +22,13 @@
 | [CHANGELOG.md](./CHANGELOG.md) | 版本发布历史 |
 | [UPSTREAM_PRS.md](./UPSTREAM_PRS.md) | 上游 PR 跟踪与评估 |
 
+## 🏗️ 设计文档
+
+| 文档 | 说明 |
+|------|------|
+| [design/README.md](./design/README.md) | 大型功能设计文档索引 |
+| [design/AI_AUTONOMOUS_DEVELOPMENT.md](./design/AI_AUTONOMOUS_DEVELOPMENT.md) | AI 自主开发与测试系统设计 |
+
 ## 🧪 测试文档
 
 | 文档 | 说明 |
@@ -59,8 +66,9 @@
 | 活跃文档 | 14 篇 |
 | 归档文档 | 1 篇 |
 | 测试文档 | 6 篇 |
-| 总计 | 21 篇 |
+| 设计文档 | 2 篇 |
+| 总计 | 23 篇 |
 
 ---
 
-**最后更新**: 2026-02-13
+**最后更新**: 2026-02-14
