@@ -16,6 +16,7 @@
 | ⭐ | 本地文件管理 | 📋 待开发 | 读取本地文件 |
 | ⭐ | 钉钉通道 | 📋 评估中 | 备选通道 |
 | ⭐ | Discord | ❌ 搁置 | 需代理 |
+| ⭐⭐ | **搜索工具测试** | 🧪 **待测试** | ddg_search, browser_search, browser_fetch |
 
 **平台策略**: 专注 Windows 桌面版，覆盖 80% 普通用户。Linux/macOS 用户继续使用 CLI。
 
@@ -143,6 +144,7 @@ nanodesk gateway --verbose
 
 | 日期 | 内容 |
 |------|------|
+| 2026-02-12 | 添加搜索工具（ddg_search, browser_search, browser_fetch）- **待测试** |
 | 2026-02-12 | 系统托盘修复（图标、菜单、GC 问题）|
 | 2026-02-12 | 添加辅助脚本（run_desktop.ps1, kill_all.ps1, release.ps1）|
 | 2026-02-12 | 应用退出时自动停止 Gateway |

@@ -143,6 +143,34 @@ from nanobot.agent.tools.registry import ToolRegistry
 ToolRegistry.register(MyTool())
 ```
 
+### 内置自定义工具（Nanodesk）
+
+> ⚠️ **状态：已添加，待测试**
+
+| 工具 | 说明 | 状态 |
+|------|------|------|
+| `ddg_search` | DuckDuckGo 搜索（无需 API Key）| 🧪 待测试 |
+| `browser_search` | 浏览器搜索（Playwright）| 🧪 待测试 |
+| `browser_fetch` | 浏览器页面抓取（支持 JS 渲染）| 🧪 待测试 |
+
+**使用方法：**
+```python
+# DuckDuckGo 搜索（快速，无需 API Key）
+ddg_search, query="最新 AI 新闻", count=5
+
+# 浏览器搜索（支持 JS，较慢）
+browser_search, query="Python 教程", engine="google"
+
+# 浏览器抓取动态页面
+browser_fetch, url="https://spa-app.example.com"
+```
+
+**安装依赖：**
+```bash
+pip install duckduckgo-search playwright
+playwright install chromium
+```
+
 ### 同步上游更新
 
 ```bash
