@@ -22,9 +22,13 @@
 **平台策略**: 专注 Windows 桌面版，覆盖 80% 普通用户。Linux/macOS 用户继续使用 CLI。
 
 **Git 分支迁移**:
-- [ ] 创建 `develop` 分支
-- [ ] 设置 GitHub 分支保护规则
+- [x] 创建 `develop` 分支
+- [x] 设置 GitHub 分支保护规则
 - [ ] 测试 feature → develop → nanodesk 工作流
+
+**上游同步测试**:
+- [ ] 测试 v0.1.3.post7 更新（内存系统、/new 命令、飞书修复）
+- [ ] 确认无误后合并到 `nanodesk`
 
 **上游跟踪**: [UPSTREAM_PRS.md](./UPSTREAM_PRS.md)
 - 🔴 PR #257 - Token Usage Tracking
