@@ -410,7 +410,7 @@ class MainWindow(QMainWindow):
         """Force quit application - called when user selects 'Exit' from tray menu."""
         # Stop gateway if running
         if self.process_manager.is_running:
-            self._log_handler.write("Stopping Gateway before exit...", "INFO")
+            self.log_handler.write("Stopping Gateway before exit...", "INFO")
             self.process_manager.stop_gateway()
 
         # Hide tray icon

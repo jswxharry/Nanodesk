@@ -34,14 +34,18 @@ class DuckDuckGoSearchTool(Tool):
 
     async def execute(self, query: str, count: int | None = None, **kwargs: Any) -> str:
         try:
-            # Try to import duckduckgo-search
+            # Try to import ddgs (new package name)
             try:
-                from duckduckgo_search import DDGS
+                from ddgs import DDGS
             except ImportError:
-                return (
-                    "Error: duckduckgo-search not installed.\n"
-                    "Install with: pip install duckduckgo-search"
-                )
+                try:
+                    # Fallback to old package name
+                    from duckduckgo_search import DDGS
+                except ImportError:
+                    return (
+                        "Error: ddgs not installed.\n"
+                        "Install with: pip install ddgs"
+                    )
 
             n = min(max(count or self.max_results, 1), 10)
 
