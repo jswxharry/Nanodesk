@@ -29,6 +29,9 @@
 |------|------|
 | [design/README.md](./design/README.md) | 大型功能设计文档索引 |
 | [design/AI_AUTONOMOUS_DEVELOPMENT.md](./design/AI_AUTONOMOUS_DEVELOPMENT.md) | AI 自主开发与测试系统设计 |
+| [design/TOOL_EXECUTION_FEEDBACK.md](./design/TOOL_EXECUTION_FEEDBACK.md) | 工具执行即时反馈改进 |
+| [design/PREVENT_SLEEP_KEEP_RUNNING.md](./design/PREVENT_SLEEP_KEEP_RUNNING.md) | 屏幕关闭但保持运行（电源管理） |
+| [design/CONTEXT_SIZE_DISPLAY.md](./design/CONTEXT_SIZE_DISPLAY.md) | 对话上下文大小显示（token 计数） |
 
 ## 🧪 测试文档
 
@@ -67,8 +70,8 @@
 | 活跃文档 | 14 篇 |
 | 归档文档 | 1 篇 |
 | 测试文档 | 6 篇 |
-| 设计文档 | 3 篇 |
-| 总计 | 24 篇 |
+| 设计文档 | 4 篇 |
+| 总计 | 25 篇 |
 
 ---
 
