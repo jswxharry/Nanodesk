@@ -11,6 +11,7 @@
 | [AI_AUTONOMOUS_DEVELOPMENT.md](./AI_AUTONOMOUS_DEVELOPMENT.md) | 📝 设计阶段 | 中-高 | AI 自主开发与测试系统设计 |
 | [TOOL_EXECUTION_FEEDBACK.md](./TOOL_EXECUTION_FEEDBACK.md) | 📝 设计阶段 | 高 | 工具执行即时反馈改进（解决用户焦虑） |
 | [PREVENT_SLEEP_KEEP_RUNNING.md](./PREVENT_SLEEP_KEEP_RUNNING.md) | 📝 设计阶段 | 高 | 屏幕关闭但保持运行（电源管理） |
+| [CONTEXT_SIZE_DISPLAY.md](./CONTEXT_SIZE_DISPLAY.md) | 📝 设计阶段 | 低-中 | 对话上下文大小显示（token 计数） |
 
 ---
 
