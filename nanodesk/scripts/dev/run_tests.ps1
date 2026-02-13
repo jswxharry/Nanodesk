@@ -281,7 +281,7 @@ if (-not $SkipBuild) {
     $buildScripts = @(
         "nanodesk/scripts/build/build_all.ps1",
         "nanodesk/scripts/build/build_desktop.ps1",
-        "nanodesk/scripts/prepare_embedded_python.py"
+        "nanodesk/scripts/build/prepare_embedded_python.py"
     )
     
     foreach ($script in $buildScripts) {

@@ -79,7 +79,7 @@ foreach ($file in $versionFiles) {
 if (-not $SkipBuild) {
     Write-Host ""
     Write-Host "[3/6] Building desktop application..." -ForegroundColor Yellow
-    & "$ScriptDir\build_all.ps1"
+    & "$ScriptDir\build\build_all.ps1"
     if ($LASTEXITCODE -ne 0) {
         Write-Error "Build failed!"
         exit 1
