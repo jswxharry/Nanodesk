@@ -19,11 +19,8 @@ def inject():
     
     print("[INFO] Loading Nanodesk customization...")
     
-    # TODO: 在这里注册你的扩展
-    # 示例：
-    # from nanodesk.tools import register_tools
-    # from nanodesk.channels import register_channels
-    # register_tools()
-    # register_channels()
+    # 注册自定义工具
+    from nanodesk.tools import register_tools
+    register_tools()
     
     print("[INFO] Nanodesk customization loaded")
