@@ -47,11 +47,11 @@
 
 ## 高价值 PR ⭐⭐⭐（推荐优先关注）
 
-### PR #257 - Token Usage Tracking & Budget Monitoring ⭐⭐⭐⭐⭐ 高优关注
+### PR #257 - Token Usage Tracking & Budget Monitoring ⭐⭐⭐⭐⭐ 高优关注 ❗
 | 属性 | 内容 |
 |------|------|
 | **链接** | https://github.com/HKUDS/nanobot/pull/257 |
-| **状态** | **Merged** ✅ 2026-02-08 |
+| **状态** | **Open** 📝 等待合并 |
 | **功能** | 全面的 Token 使用量追踪和预算监控 |
 
 **包含功能**：
@@ -72,9 +72,10 @@
 - Shell 安全加固提升生产环境安全性
 
 **跟进策略**：
-- 🎯 **已合并！** 需要同步到 develop 分支
+- 🎯 **尚未合并！** 关注合并进度，合并后立即同步
 - `UsageTool` 可作为 `/context` 命令的底层实现之一
-- 评估是否需要在其基础上添加自动显示功能
+- 功能完整度高，合并后可直接使用
+- **风险**: PR 已开放较久，可能因 review 意见需要调整
 
 **关联**: [CONTEXT_SIZE_DISPLAY.md](../design/CONTEXT_SIZE_DISPLAY.md)
 
@@ -285,7 +286,7 @@ open https://github.com/HKUDS/nanobot/pulls
 
 | Nanodesk 设计 | 相关上游 PR | 状态 | 评估 |
 |---------------|-------------|------|------|
-| [上下文大小显示](../design/CONTEXT_SIZE_DISPLAY.md) | #257 (UsageTool), #339 (实时追踪) | #257 ✅ 已合并<br>#339 📝 Open | #257 提供查询接口<br>#339 提供实时推送<br>我们的设计是**自动显示**，可能需要在它们基础上封装 |
+| [上下文大小显示](../design/CONTEXT_SIZE_DISPLAY.md) | #257 (UsageTool), #339 (实时追踪) | #257 📝 待合并<br>#339 📝 Open | #257 提供查询接口<br>#339 提供实时推送<br>我们的设计是**自动显示**，可能需要在它们基础上封装<br>**建议**: 若 #257 长期不合并，可考虑自行实现简化版 |
 | [AI 自主开发测试](../design/AI_AUTONOMOUS_DEVELOPMENT.md) | #339 (任务进度卡片) | 📝 Open | 可借鉴其进度可视化设计 |
 | [工具执行反馈](../design/TOOL_EXECUTION_FEEDBACK.md) | #339 (实时任务卡片) | 📝 Open | 其 WebSocket 实时推送可复用 |
 
