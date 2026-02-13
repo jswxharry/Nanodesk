@@ -18,10 +18,12 @@ class BrowserSearchTool(Tool):
 
     name = "browser_search"
     description = (
-        "Search the web using a real browser. "
+        "Search the web using a real browser (Playwright). "
         "Supports JavaScript-heavy sites. "
         "Engines: google, bing, duckduckgo. "
-        "Slower than API-based search but more capable."
+        "NOTE: If Playwright is not installed, you MUST tell the user to manually run: "
+        "pip install playwright && playwright install chromium. "
+        "Do NOT claim to have executed these commands yourself."
     )
     parameters = {
         "type": "object",
