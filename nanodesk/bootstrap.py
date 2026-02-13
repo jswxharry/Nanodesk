@@ -19,8 +19,33 @@ def inject():
     
     print("[INFO] Loading Nanodesk customization...")
     
-    # 注册自定义工具
-    from nanodesk.tools import register_tools
-    register_tools()
+    # Monkey patch AgentLoop to register custom tools
+    _patch_agent_loop()
     
     print("[INFO] Nanodesk customization loaded")
+
+
+def _patch_agent_loop():
+    """Patch AgentLoop to register custom tools."""
+    from nanobot.agent.loop import AgentLoop
+    from nanobot.agent.tools.registry import ToolRegistry
+    
+    # Store original method
+    original_register = AgentLoop._register_default_tools
+    
+    def _register_with_custom_tools(self):
+        """Register default tools plus custom tools."""
+        # Call original method
+        original_register(self)
+        
+        # Register custom tools
+        from nanodesk.tools.ddg_search import DuckDuckGoSearchTool
+        from nanodesk.tools.browser_search import BrowserSearchTool, BrowserFetchTool
+        
+        self.tools.register(DuckDuckGoSearchTool())
+        self.tools.register(BrowserSearchTool())
+        self.tools.register(BrowserFetchTool())
+        print("[INFO] Registered Nanodesk custom tools")
+    
+    # Replace method
+    AgentLoop._register_default_tools = _register_with_custom_tools
