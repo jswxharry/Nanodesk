@@ -32,6 +32,7 @@
 
 | 优先级 | 功能 | 状态 | 来源 | 备注 |
 |--------|------|------|------|------|
+| ⭐ | **配置向导更新** | 📋 待开发 | upstream #604 | 支持 Custom Provider 配置（目前需手动编辑 config.json）|
 | ⭐ | **上下文大小显示** | 📝 设计完成 | [CONTEXT_SIZE_DISPLAY.md](./design/CONTEXT_SIZE_DISPLAY.md) | 显示对话 token 数，依赖 PR #257 |
 | ⭐ | **搜索能力强化** | 📝 设计完成 | [SEARCH_ENHANCEMENT.md](./design/SEARCH_ENHANCEMENT.md) | 多源聚合、SearXNG 自托管方案 |
 | ⭐ | 飞书语音 | 🔄 回滚待审 | - | 需开通 `im:resource` 权限 |
