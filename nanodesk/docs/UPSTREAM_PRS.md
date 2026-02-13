@@ -6,6 +6,28 @@
 
 ---
 
+## 已同步更新 ✅
+
+### 2026-02-12 同步批次
+
+本次同步合并了 upstream/main 的 6 个新提交：
+
+| PR | 功能 | 影响文件 | 状态 |
+|----|------|---------|------|
+| #538 | 交织链式思考 (Interleaved CoT) | `agent/loop.py` | ✅ 已同步 |
+| #533 | Cron 一次性定时任务 (`at` 参数) | `agent/tools/cron.py`, `skills/cron/SKILL.md` | ✅ 已同步 |
+| #543 | 子代理增强 (edit_file + 时间上下文) | `agent/subagent.py`, `agent/context.py` | ✅ 已同步 |
+
+**详细变更**：
+1. **交织链式思考**: 每次工具调用后添加反思提示 `"Reflect on the results and decide next steps."`，提升 Agent 推理能力
+2. **Cron 一次性任务**: 新增 `at` 参数支持 ISO 格式时间（如 `2026-02-12T10:30:00`），执行后自动删除
+3. **子代理增强**: 
+   - 添加 `EditFileTool` 到子代理工具集
+   - 系统提示增加当前时间和时区信息
+   - 提示技能目录位置 `workspace/skills/`
+
+---
+
 ## 高价值 PR ⭐⭐⭐（推荐优先关注）
 
 ### PR #257 - Token Usage Tracking & Budget Monitoring
