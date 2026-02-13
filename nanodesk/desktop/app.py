@@ -1,7 +1,5 @@
 """QApplication setup for Nanodesk Desktop."""
 
-import sys
-
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QFont
 from PySide6.QtWidgets import QApplication
@@ -9,30 +7,28 @@ from PySide6.QtWidgets import QApplication
 
 class NanodeskApp(QApplication):
     """Custom QApplication for Nanodesk."""
-    
+
     def __init__(self, argv):
         super().__init__(argv)
-        
+
         # Application metadata
         self.setApplicationName("Nanodesk")
         self.setApplicationVersion("1.0.0")
         self.setOrganizationName("Nanodesk")
-        
+
         # Enable high DPI support
-        self.setHighDpiScaleFactorRoundingPolicy(
-            Qt.HighDpiScaleFactorRoundingPolicy.PassThrough
-        )
-        
+        self.setHighDpiScaleFactorRoundingPolicy(Qt.HighDpiScaleFactorRoundingPolicy.PassThrough)
+
         # Setup global font
         font = QFont("Microsoft YaHei", 10)
         self.setFont(font)
-        
+
         # Set application style
         self.setStyle("Fusion")
-        
+
         # Load stylesheet
         self._load_stylesheet()
-    
+
     def _load_stylesheet(self):
         """Load application stylesheet with light theme."""
         # Force light theme to ensure visibility on both light/dark Windows modes
