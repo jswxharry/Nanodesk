@@ -8,16 +8,16 @@
 
 ```powershell
 # 运行完整自动化测试套件
-.\nanodesk\scripts\run_tests.ps1
+.\nanodesk\scripts\dev\run_tests.ps1
 
 # 运行快速测试（CI/CD推荐）
-.\nanodesk\scripts\run_tests_quick.ps1
+.\nanodesk\scripts\dev\run_tests_quick.ps1
 
 # 带自动修复运行
-.\nanodesk\scripts\run_tests.ps1 -AutoFix
+.\nanodesk\scripts\dev\run_tests.ps1 -AutoFix
 
 # 详细输出
-.\nanodesk\scripts\run_tests.ps1 -Verbose
+.\nanodesk\scripts\dev\run_tests.ps1 -Verbose
 ```
 
 或逐项检查：
@@ -163,7 +163,7 @@ python -c "import tomllib; tomllib.load(open('pyproject.toml', 'rb')); print('py
 ### 5.1 检查构建脚本
 ```powershell
 # 检查脚本存在且可执行
-Test-Path nanodesk/scripts/build_all.ps1        # 期望: True
+Test-Path nanodesk/scripts/build/build_all.ps1        # 期望: True
 Test-Path nanodesk/scripts/prepare_embedded_python.py  # 期望: True
 ```
 
@@ -171,7 +171,7 @@ Test-Path nanodesk/scripts/prepare_embedded_python.py  # 期望: True
 ```powershell
 # 仅测试 PyInstaller 打包（不下载嵌入 Python）
 # 注意: 这会创建 build/ 目录，测试后需清理
-# python nanodesk/scripts/build_desktop.ps1
+# python nanodesk/scripts/build/build_desktop.ps1
 ```
 
 ---

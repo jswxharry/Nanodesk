@@ -16,7 +16,7 @@ pip install -e .
 pip install -r nanodesk/desktop/requirements.txt
 
 # Run desktop app (with UTF-8 encoding)
-.\nanodesk\scripts\run_desktop.ps1
+.\nanodesk\scripts\dev\run_desktop.ps1
 
 # Or manually with UTF-8 env vars
 $env:PYTHONIOENCODING="utf-8"
@@ -39,10 +39,10 @@ python -m nanodesk.desktop.main
 
 ```powershell
 # Complete build with embedded Python and installer
-.\nanodesk\scripts\build_all.ps1 -Clean
+.\nanodesk\scripts\build\build_all.ps1 -Clean
 
 # Or just update the app without rebuilding embedded Python
-.\nanodesk\scripts\build_all.ps1
+.\nanodesk\scripts\build\build_all.ps1
 ```
 
 Output:
@@ -56,7 +56,7 @@ Output:
 python .\nanodesk\scripts\prepare_embedded_python.py
 
 # Step 2: Build desktop app
-.\nanodesk\scripts\build_desktop.ps1
+.\nanodesk\scripts\build\build_desktop.ps1
 
 # Step 3: Create installer (optional)
 iscc .\nanodesk\scripts\setup.iss
@@ -134,13 +134,13 @@ pip install -r nanodesk/desktop/requirements.txt
 **Clean build:**
 ```powershell
 Remove-Item build_desktop, build, dist -Recurse -Force
-.\nanodesk\scripts\build_all.ps1 -Clean
+.\nanodesk\scripts\build\build_all.ps1 -Clean
 ```
 
 **Force kill all processes:**
 ```powershell
 # If Gateway is stuck or app won't close
-.\nanodesk\scripts\kill_all.ps1
+.\nanodesk\scripts\dev\kill_all.ps1
 ```
 
 ### Runtime Issues
@@ -231,7 +231,7 @@ jobs:
       - name: Build
         run: |
           python nanodesk/scripts/prepare_embedded_python.py
-          .\nanodesk\scripts\build_desktop.ps1
+          .\nanodesk\scripts\build\build_desktop.ps1
       - name: Upload
         uses: actions/upload-artifact@v3
         with:

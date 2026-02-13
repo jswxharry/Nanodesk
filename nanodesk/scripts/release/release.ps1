@@ -9,7 +9,7 @@
 .PARAMETER SkipBuild
     跳过构建步骤
 .EXAMPLE
-    .\nanodesk\scripts\release.ps1 -Version "0.2.0"
+    .\nanodesk\scripts\release\release.ps1 -Version "0.2.0"
 #>
 
 param(

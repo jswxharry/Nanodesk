@@ -1,7 +1,7 @@
 #!/usr/bin/env pwsh
 # Quick Test Suite for CI/CD
 # Runs essential tests only (faster)
-# Usage: .\nanodesk\scripts\run_tests_quick.ps1
+# Usage: .\nanodesk\scripts\dev\run_tests_quick.ps1
 
 param([switch]$FailOnWarning)
 

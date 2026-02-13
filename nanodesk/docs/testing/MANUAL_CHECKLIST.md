@@ -17,7 +17,7 @@
 ### 1.1 启动测试
 **步骤**:
 ```powershell
-.\nanodesk\scripts\run_desktop.ps1
+.\nanodesk\scripts\dev\run_desktop.ps1
 ```
 
 **验证点**:

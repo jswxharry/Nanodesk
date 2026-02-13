@@ -1,6 +1,6 @@
 #!/usr/bin/env pwsh
 # Nanodesk Automated Test Suite
-# Usage: .\nanodesk\scripts\run_tests.ps1 [-Verbose] [-SkipBuild]
+# Usage: .\nanodesk\scripts\dev\run_tests.ps1 [-Verbose] [-SkipBuild]
 
 param(
     [switch]$Verbose,
@@ -279,8 +279,8 @@ if (-not $SkipBuild) {
     
     Write-Host "  Checking build scripts..." -ForegroundColor Gray
     $buildScripts = @(
-        "nanodesk/scripts/build_all.ps1",
-        "nanodesk/scripts/build_desktop.ps1",
+        "nanodesk/scripts/build/build_all.ps1",
+        "nanodesk/scripts/build/build_desktop.ps1",
         "nanodesk/scripts/prepare_embedded_python.py"
     )
     

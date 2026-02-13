@@ -27,7 +27,7 @@ git clone https://github.com/jswxharry/Nanodesk.git
 cd Nanodesk
 
 # 一键打包（包含嵌入 Python）
-.\nanodesk\scripts\build_all.ps1 -Clean
+.\nanodesk\scripts\build\build_all.ps1 -Clean
 
 # 输出：dist/Nanodesk/ 文件夹
 ```
@@ -94,7 +94,7 @@ nanodesk/
 
 **一键构建（推荐）：**
 ```powershell
-.\nanodesk\scripts\build_all.ps1 -Clean
+.\nanodesk\scripts\build\build_all.ps1 -Clean
 ```
 
 **输出：**
@@ -107,7 +107,7 @@ nanodesk/
 python .\nanodesk\scripts\prepare_embedded_python.py
 
 # 步骤2：构建桌面应用
-.\nanodesk\scripts\build_desktop.ps1
+.\nanodesk\scripts\build\build_desktop.ps1
 
 # 步骤3：创建安装程序（可选）
 iscc .\nanodesk\scripts\setup.iss

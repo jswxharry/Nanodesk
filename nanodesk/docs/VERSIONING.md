@@ -77,7 +77,7 @@ git push origin v0.2.0
 可以创建自动化脚本来简化版本发布：
 
 ```powershell
-# scripts/release.ps1
+# scripts/release/release.ps1
 param(
     [Parameter(Mandatory=$true)]
     [string]$Version

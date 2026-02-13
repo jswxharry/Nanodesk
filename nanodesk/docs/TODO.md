@@ -44,17 +44,17 @@
 
 ```powershell
 # 运行测试
-.\nanodesk\scripts\run_tests.ps1          # 完整测试
-.\nanodesk\scripts\run_tests_quick.ps1    # 快速测试
+.\nanodesk\scripts\dev\run_tests.ps1          # 完整测试
+.\nanodesk\scripts\dev\run_tests_quick.ps1    # 快速测试
 
 # 启动桌面应用（开发模式）
-.\nanodesk\scripts\run_desktop.ps1
+.\nanodesk\scripts\dev\run_desktop.ps1
 
 # 启动 Gateway
 nanodesk gateway --verbose
 
 # 同步上游
-.\nanodesk\scripts\sync-upstream.ps1
+.\nanodesk\scripts\git\sync-upstream.ps1
 ```
 
 ---
