@@ -54,9 +54,11 @@ class BrowserSearchTool(Tool):
             from playwright.async_api import async_playwright
         except ImportError:
             return (
-                "Error: Playwright not installed.\n"
-                "Install with: pip install playwright\n"
-                "Then install browser: playwright install chromium"
+                "Error: Playwright not installed.\n\n"
+                "Please run these commands manually in your terminal:\n"
+                "  pip install playwright\n"
+                "  playwright install chromium\n\n"
+                "Note: This cannot be done by the Agent. You must run these commands yourself."
             )
 
         n = min(max(count or self.max_results, 1), 10)
