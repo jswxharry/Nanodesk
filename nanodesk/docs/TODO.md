@@ -57,7 +57,10 @@ nanodesk gateway --verbose
 
 ## 文档索引
 
+- [README.md](./README.md) - 文档总索引
 - [CHANGELOG.md](./CHANGELOG.md) - 版本历史
 - [BRANCHING.md](./BRANCHING.md) - Git 分支管理
+- [CONTRIBUTING.md](./CONTRIBUTING.md) - 开发者指南
 - [UPSTREAM_PRS.md](./UPSTREAM_PRS.md) - 上游 PR 跟踪
 - [BUILD.md](./BUILD.md) - 构建指南
+- [testing/](./testing/) - 测试文档
