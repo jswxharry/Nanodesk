@@ -11,6 +11,7 @@
 | [BUILD.md](./BUILD.md) | 构建 Windows 桌面应用（含嵌入 Python 打包）|
 | [CONFIGURATION.md](./CONFIGURATION.md) | 配置指南（手动配置 + 桌面应用配置参考）|
 | [FEISHU_SETUP.md](./FEISHU_SETUP.md) | 飞书机器人完整配置指南 |
+| [WINDOWS_LONG_RUNNING.md](./WINDOWS_LONG_RUNNING.md) | Windows 长时间运行配置（解决睡眠断连问题） |
 
 ---
 
@@ -21,6 +22,16 @@
 | [TODO.md](./TODO.md) | 待办事项和开发任务 |
 | [CHANGELOG.md](./CHANGELOG.md) | 版本发布历史 |
 | [UPSTREAM_PRS.md](./UPSTREAM_PRS.md) | 上游 PR 跟踪与评估 |
+
+## 🏗️ 设计文档
+
+| 文档 | 说明 |
+|------|------|
+| [design/README.md](./design/README.md) | 大型功能设计文档索引 |
+| [design/AI_AUTONOMOUS_DEVELOPMENT.md](./design/AI_AUTONOMOUS_DEVELOPMENT.md) | AI 自主开发与测试系统设计 |
+| [design/TOOL_EXECUTION_FEEDBACK.md](./design/TOOL_EXECUTION_FEEDBACK.md) | 工具执行即时反馈改进 |
+| [design/PREVENT_SLEEP_KEEP_RUNNING.md](./design/PREVENT_SLEEP_KEEP_RUNNING.md) | 屏幕关闭但保持运行（电源管理） |
+| [design/CONTEXT_SIZE_DISPLAY.md](./design/CONTEXT_SIZE_DISPLAY.md) | 对话上下文大小显示（token 计数） |
 
 ## 🧪 测试文档
 
@@ -59,8 +70,9 @@
 | 活跃文档 | 14 篇 |
 | 归档文档 | 1 篇 |
 | 测试文档 | 6 篇 |
-| 总计 | 21 篇 |
+| 设计文档 | 4 篇 |
+| 总计 | 25 篇 |
 
 ---
 
-**最后更新**: 2026-02-13
+**最后更新**: 2026-02-14
