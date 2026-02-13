@@ -247,7 +247,7 @@
 open https://github.com/HKUDS/nanobot/pulls
 
 # 同步上游时检查
-./nanodesk/scripts/sync-upstream.ps1
+./nanodesk/scripts/git/sync-upstream.ps1
 ```
 
 ### 当高优先级 PR 合并时

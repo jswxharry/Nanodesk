@@ -230,7 +230,7 @@ jobs:
         run: pip install -e . pyinstaller
       - name: Build
         run: |
-          python nanodesk/scripts/prepare_embedded_python.py
+          python nanodesk/scripts/build/prepare_embedded_python.py
           .\nanodesk\scripts\build\build_desktop.ps1
       - name: Upload
         uses: actions/upload-artifact@v3

@@ -12,7 +12,7 @@
 - **MINOR** (次版本号): 向下兼容的功能新增
 - **PATCH** (修订号): 向下兼容的问题修复
 
-**示例**: `0.2.0` - 第 0 主版本，第 2 次功能更新，第 0 次修复
+**示例**: `0.2.1` - 第 0 主版本，第 2 次功能更新，第 1 次修复
 
 ---
 
@@ -24,10 +24,10 @@
 
 ```python
 # nanodesk/__init__.py
-__version__ = "0.2.0"
+__version__ = "0.2.1"
 
 # nanodesk/desktop/__init__.py  
-__version__ = "0.2.0"
+__version__ = "0.2.1"
 ```
 
 ### 2. pyproject.toml（如需独立发布）
@@ -35,7 +35,7 @@ __version__ = "0.2.0"
 ```toml
 [project]
 name = "nanobot-ai"
-version = "0.2.0"  # 或保持与上游一致
+version = "0.2.1"  # 或保持与上游一致
 ```
 
 > **注意**: 当前 `pyproject.toml` 版本跟随上游 nanobot，仅作为依赖安装时使用。
@@ -45,15 +45,15 @@ version = "0.2.0"  # 或保持与上游一致
 
 ```bash
 # 创建标签
-git tag -a v0.2.0 -m "Release version 0.2.0"
+git tag -a v0.2.1 -m "Release version 0.2.1"
 
 # 推送标签到远程
-git push origin v0.2.0
+git push origin v0.2.1
 ```
 
 ### 4. GitHub Release（可选）
 
-在 GitHub 上创建 Release，关联标签 `v0.2.0`，上传打包文件。
+在 GitHub 上创建 Release，关联标签 `v0.2.1`，上传打包文件。
 
 ---
 
@@ -119,6 +119,7 @@ Write-Host "Version $Version prepared. Run 'git push origin nanodesk --tags' to 
 | 版本 | 日期 | 主要变更 |
 |------|------|----------|
 | 0.2.0 | 2026-02-12 | Windows 桌面应用完成，支持嵌入 Python 打包 |
+| 0.2.1 | 2026-02-13 | 脚本重构、测试套件、文档整合 |
 | 0.1.0 | 2026-02-10 | 飞书通道验证，基础架构搭建 |
 
 ---
