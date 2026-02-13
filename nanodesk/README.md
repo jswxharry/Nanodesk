@@ -191,10 +191,17 @@ playwright install chromium
 
 ## 分支策略
 
-| 分支 | 用途 |
-|------|------|
-| `main` | 跟踪上游，用于提 PR，不直接开发 |
-| `nanodesk` | 主工作分支，包含你的所有定制 |
+> 📖 **详细规范**: [BRANCHING.md](./docs/BRANCHING.md)
+
+| 分支 | 用途 | 说明 |
+|------|------|------|
+| `main` | 跟踪上游 | 用于提 PR，不直接开发 |
+| `nanodesk` | **稳定版** | 发布分支，仅通过 PR 合并 |
+| `develop` | **开发版** | 功能集成，日常开发基准 |
+| `feature/*` | 功能分支 | 从 develop 创建，完成后删除 |
+| `fix/*` | 修复分支 | 从 develop 创建，完成后删除 |
+
+**工作流**: `feature/*` → `develop` → `nanodesk`
 
 ## 已验证功能
 
