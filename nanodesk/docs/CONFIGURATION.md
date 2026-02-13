@@ -143,6 +143,8 @@ Linux/Mac: ~/.nanobot/config.json
 }
 ```
 
+详见 [FEISHU_SETUP.md](./FEISHU_SETUP.md) 完整配置指南。
+
 #### Discord
 
 ```json
