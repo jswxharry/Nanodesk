@@ -2,7 +2,7 @@
 
 > 记录项目待办功能和上游跟踪
 > 
-> 最后更新：2026-02-12
+> 最后更新：2026-02-13
 
 ---
 
@@ -16,7 +16,7 @@
 | ⭐ | 本地文件管理 | 📋 待开发 | 读取本地文件 |
 | ⭐ | 钉钉通道 | 📋 评估中 | 备选通道 |
 | ⭐ | Discord | ❌ 搁置 | 需代理 |
-| ⭐⭐⭐ | **Git 分支管理** | 🔄 **进行中** | 迁移到 feature → develop → nanodesk 工作流 |
+| ⭐⭐⭐ | **Git 分支管理** | ✅ **已完成** | develop 分支已创建，分支保护已配置 |
 | ⭐⭐ | **搜索工具测试** | 🧪 **待测试** | ddg_search, browser_search, browser_fetch |
 
 **平台策略**: 专注 Windows 桌面版，覆盖 80% 普通用户。Linux/macOS 用户继续使用 CLI。
@@ -24,7 +24,7 @@
 **Git 分支迁移**:
 - [x] 创建 `develop` 分支
 - [x] 设置 GitHub 分支保护规则
-- [ ] 测试 feature → develop → nanodesk 工作流
+- [x] 配置多分支工作流（feature → develop → nanodesk）
 
 **上游同步测试**:
 - [ ] 测试 v0.1.3.post7 更新（内存系统、/new 命令、飞书修复）
@@ -144,6 +144,7 @@ nanodesk gateway --verbose
 - [BUILD.md](./BUILD.md) - 桌面应用构建和打包指南
 - [DESKTOP_APP_PLAN.md](./DESKTOP_APP_PLAN.md) - 桌面应用开发计划（Phase 1 & 2 已完成）
 - [VERSIONING.md](./VERSIONING.md) - 版本管理和发布流程
+- [BRANCHING.md](./BRANCHING.md) - Git 分支管理规范
 - [UPSTREAM_PRS.md](./UPSTREAM_PRS.md) - 上游 PR 跟踪
 - [FEISHU_SETUP.md](./FEISHU_SETUP.md) - 飞书配置指南
 - [ARCHITECTURE.md](./ARCHITECTURE.md) - 项目架构
