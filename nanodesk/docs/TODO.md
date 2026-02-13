@@ -43,6 +43,10 @@
 ## 快速参考
 
 ```powershell
+# 运行测试
+.\nanodesk\scripts\run_tests.ps1          # 完整测试
+.\nanodesk\scripts\run_tests_quick.ps1    # 快速测试
+
 # 启动桌面应用（开发模式）
 .\nanodesk\scripts\run_desktop.ps1
 

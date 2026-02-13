@@ -7,8 +7,17 @@
 ## 快速执行
 
 ```powershell
-# 运行所有自动化检查
-python nanodesk\docs\testing\ai_check.py
+# 运行完整自动化测试套件
+.\nanodesk\scripts\run_tests.ps1
+
+# 运行快速测试（CI/CD推荐）
+.\nanodesk\scripts\run_tests_quick.ps1
+
+# 带自动修复运行
+.\nanodesk\scripts\run_tests.ps1 -AutoFix
+
+# 详细输出
+.\nanodesk\scripts\run_tests.ps1 -Verbose
 ```
 
 或逐项检查：
