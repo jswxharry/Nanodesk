@@ -16,9 +16,15 @@
 | ⭐ | 本地文件管理 | 📋 待开发 | 读取本地文件 |
 | ⭐ | 钉钉通道 | 📋 评估中 | 备选通道 |
 | ⭐ | Discord | ❌ 搁置 | 需代理 |
+| ⭐⭐⭐ | **Git 分支管理** | 🔄 **进行中** | 迁移到 feature → develop → nanodesk 工作流 |
 | ⭐⭐ | **搜索工具测试** | 🧪 **待测试** | ddg_search, browser_search, browser_fetch |
 
 **平台策略**: 专注 Windows 桌面版，覆盖 80% 普通用户。Linux/macOS 用户继续使用 CLI。
+
+**Git 分支迁移**:
+- [ ] 创建 `develop` 分支
+- [ ] 设置 GitHub 分支保护规则
+- [ ] 测试 feature → develop → nanodesk 工作流
 
 **上游跟踪**: [UPSTREAM_PRS.md](./UPSTREAM_PRS.md)
 - 🔴 PR #257 - Token Usage Tracking
@@ -80,6 +86,7 @@ python -c "import zipfile, os; zf = zipfile.ZipFile('Nanodesk-Portable.zip', 'w'
 ## 已完成 ✅
 
 - [x] Nanodesk 基础架构（目录结构、VS Code、脚本）
+- [x] Git 分支管理规范文档 [BRANCHING.md](./BRANCHING.md)
 - [x] 飞书通道（WebSocket、消息收发、Markdown）
 - [x] 阿里云百炼 LLM 配置
 - [x] 开发规范文档（AI_COLLABORATION.md、COMMIT_RULES.md）

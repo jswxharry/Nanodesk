@@ -41,7 +41,12 @@ def main():
 | 分支 | 用途 | 规则 |
 |-----|------|------|
 | `main` | 跟踪上游 | `git merge upstream/main --ff-only`，不直接开发 |
-| `nanodesk` | 主工作分支 | 日常开发，可修改任何文件 |
+| `nanodesk` | **稳定版** | 仅通过 PR 合并，禁止直接推送 |
+| `develop` | **开发版** | 功能集成分支，日常开发基准 |
+| `feature/*` | 功能分支 | 从 develop 创建，合并后删除 |
+| `fix/*` | 修复分支 | 从 develop 创建，合并后删除 |
+
+**详细规范**：[BRANCHING.md](./BRANCHING.md)
 
 **工作流图示**：
 
