@@ -2,7 +2,7 @@
 
 > 记录进行中的任务和待办功能
 > 
-> 最后更新：2026-02-13
+> 最后更新：2026-02-14
 > 
 > 📜 **历史记录**: [CHANGELOG.md](./CHANGELOG.md)
 
@@ -10,14 +10,31 @@
 
 ## 待办功能 📋
 
-| 优先级 | 功能 | 状态 | 备注 |
-|--------|------|------|------|
-| ⭐⭐ | Windows 截图工具 | 📋 待开发 | 飞书指令截图 |
-| ⭐ | 本地文件管理 | 📋 待开发 | 读取本地文件 |
-| ⭐ | 钉钉通道 | 📋 评估中 | 备选通道 |
-| ⭐ | Discord | ❌ 搁置 | 需代理 |
-| ⭐ | 飞书语音 | 🔄 回滚待审 | 需开通 `im:resource` 权限 |
-| ⭐⭐ | **Agent 依赖自动安装** | 📋 待评估 | 允许 Agent 执行 pip install 等命令安装缺失依赖 |
+### 🔴 高优先级（用户体验关键）
+
+| 优先级 | 功能 | 状态 | 来源 | 备注 |
+|--------|------|------|------|------|
+| ⭐⭐⭐ | **工具执行即时反馈** | 📝 设计完成 | [TOOL_EXECUTION_FEEDBACK.md](./design/TOOL_EXECUTION_FEEDBACK.md) | 解决"执行后无响应"的 UX 问题 |
+| ⭐⭐⭐ | **关屏保持运行** | 📝 设计完成 | [PREVENT_SLEEP_KEEP_RUNNING.md](./design/PREVENT_SLEEP_KEEP_RUNNING.md) | Windows 电源管理，关屏后 Agent 继续运行 |
+| ⭐⭐ | Windows 截图工具 | 📋 待开发 | - | 飞书指令截图 |
+| ⭐⭐ | **Agent 依赖自动安装** | 📋 待评估 | - | 允许 Agent 执行 pip install 等命令安装缺失依赖 |
+
+### 🟡 中优先级（功能增强）
+
+| 优先级 | 功能 | 状态 | 来源 | 备注 |
+|--------|------|------|------|------|
+| ⭐⭐ | **AI 自主开发与测试** | 📝 设计完成 | [AI_AUTONOMOUS_DEVELOPMENT.md](./design/AI_AUTONOMOUS_DEVELOPMENT.md) | 自动化测试、Vision-guided 验证 |
+| ⭐ | 本地文件管理 | 📋 待开发 | - | 读取本地文件 |
+| ⭐ | 钉钉通道 | 📋 评估中 | - | 备选通道 |
+
+### 🟢 低优先级（Nice to have）
+
+| 优先级 | 功能 | 状态 | 来源 | 备注 |
+|--------|------|------|------|------|
+| ⭐ | **上下文大小显示** | 📝 设计完成 | [CONTEXT_SIZE_DISPLAY.md](./design/CONTEXT_SIZE_DISPLAY.md) | 显示对话 token 数，依赖 PR #257 |
+| ⭐ | **搜索能力强化** | 📝 设计完成 | [SEARCH_ENHANCEMENT.md](./design/SEARCH_ENHANCEMENT.md) | 多源聚合、SearXNG 自托管方案 |
+| ⭐ | 飞书语音 | 🔄 回滚待审 | - | 需开通 `im:resource` 权限 |
+| ⭐ | Discord | ❌ 搁置 | - | 需代理 |
 
 ---
 
@@ -33,7 +50,8 @@
 
 ## 待合并
 
-- [ ] 合并 `develop` → `nanodesk`（测试已通过，等待执行）
+- [x] ~~合并 `develop` → `nanodesk`（测试已通过，等待执行）~~ ✅ 2026-02-14 完成
+- [ ] 合并 `develop` → `nanodesk`（BRANCHING.md Squash 合并指南更新）
 
 ---
 
@@ -70,6 +88,7 @@ nanodesk gateway --verbose
 
 ## 文档索引
 
+### 核心文档
 - [README.md](./README.md) - 文档总索引
 - [CHANGELOG.md](./CHANGELOG.md) - 版本历史
 - [BRANCHING.md](./BRANCHING.md) - Git 分支管理
@@ -77,3 +96,12 @@ nanodesk gateway --verbose
 - [UPSTREAM_PRS.md](./UPSTREAM_PRS.md) - 上游 PR 跟踪
 - [BUILD.md](./BUILD.md) - 构建指南
 - [testing/](./testing/) - 测试文档
+
+### 设计文档（功能提案）
+| 文档 | 优先级 | 状态 | 说明 |
+|------|--------|------|------|
+| [TOOL_EXECUTION_FEEDBACK.md](./design/TOOL_EXECUTION_FEEDBACK.md) | 🔴 高 | 📝 设计完成 | 工具执行即时反馈 |
+| [PREVENT_SLEEP_KEEP_RUNNING.md](./design/PREVENT_SLEEP_KEEP_RUNNING.md) | 🔴 高 | 📝 设计完成 | 关屏保持运行 |
+| [AI_AUTONOMOUS_DEVELOPMENT.md](./design/AI_AUTONOMOUS_DEVELOPMENT.md) | 🟡 中-高 | 📝 设计完成 | 自动化测试系统 |
+| [CONTEXT_SIZE_DISPLAY.md](./design/CONTEXT_SIZE_DISPLAY.md) | 🟢 低-中 | 📝 设计完成 | 上下文 token 显示 |
+| [SEARCH_ENHANCEMENT.md](./design/SEARCH_ENHANCEMENT.md) | 🟢 低-中 | 📝 设计完成 | 搜索能力强化 |
