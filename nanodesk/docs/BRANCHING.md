@@ -2,7 +2,7 @@
 
 > Git 工作流和分支策略，确保开发有序、发布可控
 > 
-> 最后更新：2026-02-12
+> 最后更新：2026-02-14
 
 ---
 
@@ -188,6 +188,76 @@ test/<测试描述>              # 测试：test/browser-tools
 **main 分支：**
 - [x] Restrict pushes that create files larger than 100MB
 - [x] Allow force pushes (用于同步 upstream)
+
+---
+
+## Squash 合并与冲突避免
+
+> ⚠️ **重要**：如果使用 Squash and Merge，必须遵循以下流程避免冲突
+
+### 问题背景
+
+GitHub 的 **Squash and Merge** 会把多个提交压缩成一个新提交（不同哈希），导致：
+
+```
+develop:  A→B→C          nanodesk: A→B'(squash)
+              ↓ 继续修改        ↓ 基于 squash 继续
+         冲突！B和B'是不同提交
+```
+
+### 解决方案
+
+每次 PR 合并到 `nanodesk` 后，立即同步 `develop`：
+
+```bash
+# 1. 确保本地是最新
+ git fetch origin nanodesk develop
+
+# 2. 切换到 develop，重置为 nanodesk
+git checkout develop
+git reset --hard origin/nanodesk
+
+# 3. 强制推送（覆盖 develop 的历史）
+git push --force-with-lease origin develop
+```
+
+### 完整工作流程
+
+```bash
+# 开发阶段
+ git checkout develop
+git checkout -b feature/xxx
+# ... 开发 ...
+git push origin feature/xxx
+# 创建 PR: feature/xxx → develop
+# 合并到 develop
+
+# 发布阶段（develop → nanodesk）
+# 创建 PR: develop → nanodesk
+# 选择 "Squash and merge"
+# PR 合并完成后，立即执行同步：
+
+git fetch origin
+git checkout develop
+git reset --hard origin/nanodesk
+git push --force-with-lease origin develop
+```
+
+### 替代方案
+
+如果不希望用 `reset --hard`，可以在 GitHub 设置中：
+
+```
+Settings → Branches → Branch protection rules → nanodesk
+  ↓
+Require merge strategy:
+  ✅ Allow merge commits      ← 使用这个
+  ❌ Allow squash merging    ← 禁用这个
+```
+
+**区别**：
+- **Merge commit**: 保留完整历史，不会产生冲突，但历史较复杂
+- **Squash**: 历史简洁，但需每次手动同步 develop
 
 ---
 
