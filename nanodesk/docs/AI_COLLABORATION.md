@@ -32,7 +32,7 @@
 - ✅ `nanobot/` - Bug 修复、通用功能、性能优化
 - ✅ `nanodesk/` - Windows 特定功能、个人工作流、实验性代码
 
-详细判断标准参见 [CODE_LOCATION.md](./CODE_LOCATION.md)。
+详细判断标准参见 [CONTRIBUTING.md](./CODE_LOCATION.md)。
 
 ---
 
@@ -58,12 +58,12 @@
 **同步上游**：
 ```bash
 # 使用脚本（推荐）
-.\nanodesk\scripts\sync-upstream.ps1
+.\nanodesk\scripts\git\sync-upstream.ps1
 ```
 
 **提取贡献**：
 ```bash
-.\nanodesk\scripts\extract-contrib.ps1 <commit-hash>
+.\nanodesk\scripts\git\extract-contrib.ps1 <commit-hash>
 ```
 
 ---

@@ -53,7 +53,7 @@
 ## 待合并
 
 - [x] ~~合并 `develop` → `nanodesk`（测试已通过，等待执行）~~ ✅ 2026-02-14 完成
-- [ ] 合并 `develop` → `nanodesk`（BRANCHING.md Squash 合并指南更新）
+- [x] 合并 `develop` → `nanodesk`（BRANCHING.md Squash 合并指南更新）✅ 已完成
 
 ---
 
