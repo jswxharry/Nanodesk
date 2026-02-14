@@ -6,7 +6,8 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
-$ProjectRoot = Split-Path (Split-Path $PSScriptRoot)
+# nanodesk/scripts/build/ → project root (3 levels up)
+$ProjectRoot = Split-Path (Split-Path (Split-Path $PSScriptRoot))
 $EmbeddedPath = Join-Path $ProjectRoot $EmbeddedDir
 
 Write-Host "========================================" -ForegroundColor Cyan

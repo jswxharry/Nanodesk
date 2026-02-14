@@ -1,21 +1,29 @@
-"""Nanodesk Bootstrap - 启动时注入定制
+"""Nanodesk Bootstrap - Customization injection
 
-在 nanobot 启动前自动加载你的定制扩展。
+Automatically loads customizations before nanobot starts.
 """
 
+import os
 import sys
 from pathlib import Path
 
+# Windows encoding fix: set UTF-8 encoding to avoid Unicode errors
+if sys.platform == "win32":
+    os.environ.setdefault("PYTHONIOENCODING", "utf-8")
+
 
 def inject():
-    """注入 Nanodesk 定制到 nanobot
+    """Inject Nanodesk customization into nanobot.
 
-    注册你的工具、频道、技能等扩展。
+    Registers custom tools, channels, and providers.
     """
-    # 确保项目根目录在路径中
+    # Ensure project root is in path
     root = Path(__file__).parent.parent
     if str(root) not in sys.path:
         sys.path.insert(0, str(root))
+
+    # Patch Windows encoding for compatibility
+    _patch_windows_encoding()
 
     print("[INFO] Loading Nanodesk customization...")
 
@@ -48,3 +56,14 @@ def _patch_agent_loop():
 
     # Replace method
     AgentLoop._register_default_tools = _register_with_custom_tools
+
+
+def _patch_windows_encoding():
+    """Patch Windows encoding to avoid UnicodeEncodeError."""
+    if sys.platform != "win32":
+        return
+
+    import nanobot
+
+    # Use ASCII fallback on Windows to avoid UnicodeEncodeError
+    nanobot.__logo__ = "[nanobot]"
