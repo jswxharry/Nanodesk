@@ -1,462 +1,438 @@
-# 屏幕关闭但保持运行设计提案
+# 屏幕关闭但保持运行 - 简化版设计
 
 > 实现 Windows 下屏幕可关闭，但 Nanodesk Agent 继续运行的功能
 
-**提案状态**: 📝 设计阶段  
+**提案状态**: 📝 待实现  
 **优先级**: 高  
-**影响范围**: `nanodesk/desktop/`, `nanobot/agent/`
+**预计时间**: 0.5 天  
+**设计状态**: ✅ 已定稿  
 
 ---
 
-## 目标
+## 核心原则
 
-### 用户场景
+**插电 + Gateway 运行 = 阻止睡眠，其他情况 = 允许睡眠**
+
+保护笔记本电池，接电时才保持运行。
+
+---
+
+## 用户场景
 
 ```
-用户: 晚上让 Agent 运行，我想关屏幕省电
+场景 A: 台式机 / 笔记本插电
       ↓
-操作: 关闭显示器 / Win+L 锁屏
+操作: 启动 Gateway，关闭显示器
       ↓
-结果: 屏幕黑了，但 Agent 继续运行，飞书消息能正常回复
+结果: ✅ 接电中，阻止睡眠，Agent 继续运行
+
+场景 B: 笔记本用电池
       ↓
-早上: 开屏，看到 Agent 一整晚处理的消息记录
+操作: 启动 Gateway
+      ↓
+结果: ⚠️ 提示用户"未接电，不阻止睡眠"
+      ↓
+用户: 插上电源或继续（此时关屏会睡眠）
 ```
-
-### 核心需求
-
-| 功能 | 必须 | 说明 |
-|------|------|------|
-| 允许关闭屏幕 | ✅ | 显示器节能，延长寿命 |
-| 阻止系统睡眠 | ✅ | CPU/网络保持活跃 |
-| 自动恢复 | ✅ | 应用退出时恢复系统默认行为 |
-| 可配置 | 可选 | 用户可选择是否启用 |
 
 ---
 
 ## 技术方案
 
-### Windows API: SetThreadExecutionState
+### Windows API
 
 ```c
-// 阻止睡眠但允许关闭屏幕
-ES_CONTINUOUS | ES_SYSTEM_REQUIRED        // ✅ 推荐
-
-// 阻止睡眠且阻止关闭屏幕  
-ES_CONTINUOUS | ES_SYSTEM_REQUIRED | ES_DISPLAY_REQUIRED  // ❌ 不让关屏
+ES_CONTINUOUS | ES_SYSTEM_REQUIRED    // 阻止睡眠，但允许关屏
 ```
 
-**关键区别**:
-- `ES_SYSTEM_REQUIRED` - 保持系统运行（必须）
-- `ES_DISPLAY_REQUIRED` - 保持屏幕开启（我们**不需要**这个）
+- `ES_SYSTEM_REQUIRED` - 保持系统运行 ✓
+- `ES_DISPLAY_REQUIRED` - 保持屏幕开启 ✗（不需要）
 
-### 实现架构
+### 实现（极简）
 
-```
-┌─────────────────────────────────────────────────────────┐
-│                    Nanodesk Desktop                      │
-│  ┌─────────────────┐         ┌──────────────────────┐  │
-│  │   MainWindow    │         │   PowerManager       │  │
-│  │  ┌───────────┐  │         │  ┌────────────────┐  │  │
-│  │  │ __init__  │──┼────────>│  │ prevent_sleep()│  │  │
-│  │  └───────────┘  │         │  └────────────────┘  │  │
-│  │         │       │         │           │          │  │
-│  │  ┌──────▼──────┐│         │  ┌────────▼─────────┐│  │
-│  │  │ closeEvent  ││────────>│  │ allow_sleep()    ││  │
-│  │  └─────────────┘│         │  └──────────────────┘│  │
-│  └─────────────────┘         └──────────────────────┘  │
-│                              │                          │
-│                              ▼                          │
-│                    SetThreadExecutionState()            │
-└─────────────────────────────────────────────────────────┘
+```python
+# nanodesk/desktop/core/power_manager.py
+"""Windows 电源管理 - 插电时才阻止睡眠"""
+
+import ctypes
+import atexit
+import threading
+from dataclasses import dataclass
+from loguru import logger
+
+ES_CONTINUOUS = 0x80000000
+ES_SYSTEM_REQUIRED = 0x00000001
+
+
+@dataclass
+class PowerStatus:
+    """电源状态"""
+    on_ac_power: bool      # 是否接交流电源（插电）
+    battery_percent: int   # 电量百分比（0-100，台式机为100）
+
+
+# ctypes 结构体定义（模块级别，避免重复定义）
+class _SYSTEM_POWER_STATUS(ctypes.Structure):
+    """Windows SYSTEM_POWER_STATUS 结构体"""
+    _fields_ = [
+        ("ACLineStatus", ctypes.c_ubyte),
+        ("BatteryFlag", ctypes.c_ubyte),
+        ("BatteryLifePercent", ctypes.c_ubyte),
+        ("Reserved1", ctypes.c_ubyte),
+        ("BatteryLifeTime", ctypes.c_ulong),
+        ("BatteryFullLifeTime", ctypes.c_ulong),
+    ]
+
+
+# 全局状态
+_last_ac_status: bool | None = None
+_is_preventing: bool = False
+_monitor_started: bool = False
+_lock = threading.Lock()
+
+
+def get_power_status() -> PowerStatus:
+    """获取当前电源状态"""
+    try:
+        status = _SYSTEM_POWER_STATUS()
+        if ctypes.windll.kernel32.GetSystemPowerStatus(ctypes.byref(status)):
+            on_ac = status.ACLineStatus == 1
+            battery = status.BatteryLifePercent if status.BatteryLifePercent <= 100 else 100
+            return PowerStatus(on_ac_power=on_ac, battery_percent=battery)
+    except Exception as e:
+        logger.warning(f"[Power] 获取电源状态失败: {e}")
+    
+    # 默认按插电处理（保守策略）
+    return PowerStatus(on_ac_power=True, battery_percent=100)
+
+
+def should_prevent_sleep() -> tuple[bool, str]:
+    """
+    判断是否应阻止睡眠
+    
+    Returns:
+        (是否阻止, 原因说明)
+    """
+    status = get_power_status()
+    
+    if not status.on_ac_power:
+        return False, f"未接电源（电量 {status.battery_percent}%），不阻止睡眠以保护电池"
+    
+    return True, f"已接电源，阻止睡眠以维持 Gateway 运行"
+
+
+def prevent_sleep() -> bool:
+    """
+    尝试阻止系统睡眠（线程安全）
+    
+    Returns:
+        是否成功阻止
+    """
+    global _is_preventing
+    
+    should_prevent, reason = should_prevent_sleep()
+    
+    with _lock:
+        if not should_prevent:
+            if _is_preventing:
+                # 之前阻止了，现在需要恢复
+                allow_sleep()
+            else:
+                logger.info(f"[Power] {reason}")
+            return False
+        
+        if _is_preventing:
+            # 已经在阻止，无需重复
+            return True
+        
+        try:
+            ctypes.windll.kernel32.SetThreadExecutionState(
+                ES_CONTINUOUS | ES_SYSTEM_REQUIRED
+            )
+            _is_preventing = True
+            logger.info(f"[Power] {reason}")
+            return True
+        except Exception as e:
+            logger.error(f"[Power] 阻止睡眠失败: {e}")
+            return False
+
+
+def allow_sleep():
+    """恢复系统睡眠（线程安全）"""
+    global _is_preventing
+    
+    with _lock:
+        if not _is_preventing:
+            return
+        
+        try:
+            ctypes.windll.kernel32.SetThreadExecutionState(ES_CONTINUOUS)
+            _is_preventing = False
+            logger.info("[Power] 已恢复系统睡眠")
+        except Exception as e:
+            logger.error(f"[Power] 恢复睡眠失败: {e}")
+
+
+def check_power_change():
+    """
+    检查电源状态变化，自动调整睡眠设置
+    由定时器每 5 分钟调用一次
+    
+    注意：锁外调用 prevent_sleep/allow_sleep，避免死锁
+    """
+    global _last_ac_status
+    
+    status = get_power_status()
+    current_ac = status.on_ac_power
+    should_update = False
+    
+    with _lock:
+        # 首次运行，记录状态
+        if _last_ac_status is None:
+            _last_ac_status = current_ac
+            return
+        
+        # 状态变化
+        if current_ac != _last_ac_status:
+            should_update = True
+            _last_ac_status = current_ac
+    
+    # 锁外执行，避免死锁
+    if should_update:
+        if current_ac:
+            # 从电池变为插电
+            logger.info("[Power] 检测到电源接入，自动阻止睡眠")
+            prevent_sleep()
+        else:
+            # 从插电变为电池
+            logger.warning(f"[Power] 检测到电源断开（电量 {status.battery_percent}%），自动恢复睡眠")
+            allow_sleep()
+
+
+def start_power_monitor(interval_seconds: int = 300):
+    """
+    启动电源监控
+    
+    Args:
+        interval_seconds: 检查间隔（秒），默认 5 分钟，测试时可设为 5
+    """
+    global _monitor_started, _last_ac_status
+    
+    with _lock:
+        if _monitor_started:
+            logger.debug("[Power] 电源监控已在运行，跳过")
+            return
+        _monitor_started = True
+        _last_ac_status = None  # 重置状态，强制重新检测
+    
+    def monitor_loop():
+        while True:
+            threading.Event().wait(interval_seconds)
+            check_power_change()
+    
+    thread = threading.Thread(target=monitor_loop, daemon=True)
+    thread.start()
+    logger.info(f"[Power] 电源监控已启动（每 {interval_seconds} 秒检查）")
+
+
+# 确保退出时恢复睡眠
+def _cleanup():
+    """退出清理"""
+    with _lock:
+        if _is_preventing:
+            logger.info("[Power] 程序退出，恢复系统睡眠")
+            try:
+                ctypes.windll.kernel32.SetThreadExecutionState(ES_CONTINUOUS)
+            except:
+                pass
+
+atexit.register(_cleanup)
 ```
 
 ---
 
-## 详细设计
+## 集成点
 
-### 1. 电源管理模块
-
-```python
-# nanodesk/desktop/core/power_manager.py
-"""Windows 电源管理，保持后台运行但允许关屏"""
-
-import ctypes
-from ctypes import wintypes
-from loguru import logger
-
-# Windows API 常量
-ES_AWAYMODE_REQUIRED = 0x00000040
-ES_CONTINUOUS = 0x80000000
-ES_DISPLAY_REQUIRED = 0x00000002
-ES_SYSTEM_REQUIRED = 0x00000001
-
-
-class PowerManager:
-    """
-    管理 Windows 电源状态，确保 Agent 在后台持续运行
-    
-    特性:
-    - 阻止系统进入睡眠 (S3/S4)
-    - 允许关闭显示器 (不影响 ES_DISPLAY_REQUIRED)
-    - 应用退出时自动恢复
-    """
-    
-    _instance = None
-    _initialized = False
-    
-    def __new__(cls):
-        """单例模式"""
-        if cls._instance is None:
-            cls._instance = super().__new__(cls)
-        return cls._instance
-    
-    def __init__(self):
-        if PowerManager._initialized:
-            return
-        self._is_preventing = False
-        PowerManager._initialized = True
-    
-    def prevent_sleep(self, allow_screen_off: bool = True) -> bool:
-        """
-        阻止系统睡眠
-        
-        Args:
-            allow_screen_off: True=允许关闭屏幕, False=保持屏幕开启
-        
-        Returns:
-            是否成功
-        """
-        try:
-            flags = ES_CONTINUOUS | ES_SYSTEM_REQUIRED
-            
-            if not allow_screen_off:
-                flags |= ES_DISPLAY_REQUIRED
-                logger.info("[PowerManager] 阻止睡眠 + 保持屏幕开启")
-            else:
-                logger.info("[PowerManager] 阻止睡眠，允许关闭屏幕")
-            
-            result = ctypes.windll.kernel32.SetThreadExecutionState(flags)
-            
-            if result == 0:
-                logger.error("[PowerManager] SetThreadExecutionState 调用失败")
-                return False
-            
-            self._is_preventing = True
-            return True
-            
-        except Exception as e:
-            logger.error(f"[PowerManager] 阻止睡眠失败: {e}")
-            return False
-    
-    def allow_sleep(self) -> bool:
-        """
-        恢复系统默认睡眠行为
-        应用退出时必须调用
-        """
-        try:
-            result = ctypes.windll.kernel32.SetThreadExecutionState(ES_CONTINUOUS)
-            
-            if result == 0:
-                logger.error("[PowerManager] 恢复睡眠设置失败")
-                return False
-            
-            self._is_preventing = False
-            logger.info("[PowerManager] 已恢复系统睡眠设置")
-            return True
-            
-        except Exception as e:
-            logger.error(f"[PowerManager] 恢复睡眠失败: {e}")
-            return False
-    
-    @property
-    def is_preventing(self) -> bool:
-        """当前是否正在阻止睡眠"""
-        return self._is_preventing
-
-
-# 全局实例
-power_manager = PowerManager()
-```
-
-### 2. 配置选项
-
-```python
-# nanodesk/config.py 或 nanobot/config/schema.py
-
-class DesktopConfig(BaseModel):
-    """桌面应用配置"""
-    
-    prevent_sleep: bool = True
-    """阻止系统自动睡眠，保持 Agent 运行"""
-    
-    allow_screen_off: bool = True  
-    """允许关闭显示器（仅阻止系统睡眠）"""
-    
-    auto_start: bool = False
-    """Windows 启动时自动运行"""
-
-```
-
-### 3. 集成到主窗口
+### 1. Desktop 启动 Gateway 时
 
 ```python
 # nanodesk/desktop/windows/main_window.py
 
-from nanodesk.desktop.core.power_manager import power_manager
+from nanodesk.desktop.core.power_manager import prevent_sleep, allow_sleep
 
 class MainWindow(QMainWindow):
-    def __init__(self, config: DesktopConfig):
-        super().__init__()
-        self.config = config
-        
-        # ... 其他初始化 ...
-        
-        # 初始化电源管理
-        self._init_power_management()
     
-    def _init_power_management(self):
-        """初始化电源管理，阻止睡眠但允许关屏"""
-        if not self.config.prevent_sleep:
-            logger.info("[Power] 电源管理已禁用（配置）")
-            return
-            
-        success = power_manager.prevent_sleep(
-            allow_screen_off=self.config.allow_screen_off
-        )
+    def start_gateway(self):
+        """启动 Gateway 时根据电源状态决定是否阻止睡眠"""
+        # ... 启动代码 ...
         
-        if success:
-            # 日志记录
-            logger.info("[Power] 已阻止系统睡眠，允许关闭屏幕")
-            
-            # 显示托盘提示
+        from nanodesk.desktop.core.power_manager import should_prevent_sleep, start_power_monitor
+        
+        # 启动电源监控
+        start_power_monitor()
+        
+        should_prevent, reason = should_prevent_sleep()
+        
+        if should_prevent:
+            prevent_sleep()
             self.tray_icon.showMessage(
                 "Nanodesk",
-                "🟢 Agent 已启动\n"
-                "已阻止系统睡眠，关闭屏幕后 Agent 仍会继续运行",
+                "🟢 Gateway 已启动\n已接电源，可关闭屏幕保持运行",
                 QSystemTrayIcon.Information,
                 5000
             )
-            
-            # 可选：添加到消息历史，让用户在聊天窗口也能看到
-            self._append_system_message(
-                "✅ Agent 已启动\n"
-                "💡 提示：系统已配置为阻止睡眠但允许关闭屏幕。\n"
-                "   您可以放心关闭显示器，Agent 将在后台继续运行。"
-            )
         else:
-            logger.warning("[Power] 无法设置电源管理，系统可能会在关屏后睡眠")
             self.tray_icon.showMessage(
                 "Nanodesk",
-                "⚠️ 电源管理设置失败\n"
-                "关闭屏幕后 Agent 可能会停止运行",
+                f"⚠️ Gateway 已启动\n{reason}",
                 QSystemTrayIcon.Warning,
                 5000
             )
     
-    def closeEvent(self, event):
-        """关闭窗口时恢复电源设置"""
-        # 恢复睡眠
-        if power_manager.is_preventing:
-            success = power_manager.allow_sleep()
-            
-            if success:
-                logger.info("[Power] Agent 已停止，已恢复系统睡眠设置")
-                self.tray_icon.showMessage(
-                    "Nanodesk",
-                    "🔴 Agent 已停止\n"
-                    "已恢复系统睡眠设置，电脑将正常进入睡眠",
-                    QSystemTrayIcon.Information,
-                    3000
-                )
-            else:
-                logger.warning("[Power] 恢复系统睡眠设置失败")
+    def stop_gateway(self):
+        """停止 Gateway 时恢复睡眠"""
+        # ... 停止代码 ...
         
-        # ... 其他清理 ...
-        event.accept()
+        allow_sleep()
+        
+        self.tray_icon.showMessage(
+            "Nanodesk",
+            "🔴 Gateway 已停止\n电脑将正常进入睡眠",
+            QSystemTrayIcon.Information,
+            3000
+        )
 ```
 
-### 4. 设置面板集成
+### 2. Gateway 子进程自身（保险机制）
 
 ```python
-# nanodesk/desktop/widgets/settings_dialog.py
+# nanodesk/bootstrap.py
 
-class SettingsDialog(QDialog):
-    def __init__(self, config: DesktopConfig):
-        super().__init__()
-        self.config = config
-        self._setup_ui()
+def _is_gateway_mode() -> bool:
+    """检测是否在 Gateway 模式下运行"""
+    import sys
+    return "gateway" in sys.argv
+
+def inject():
+    # ... 现有注入代码 ...
     
-    def _setup_ui(self):
-        # ... 其他设置 ...
-        
-        # 电源管理设置组
-        power_group = QGroupBox("电源管理")
-        power_layout = QVBoxLayout()
-        
-        self.prevent_sleep_check = QCheckBox("阻止系统睡眠")
-        self.prevent_sleep_check.setChecked(self.config.prevent_sleep)
-        self.prevent_sleep_check.setToolTip(
-            "允许关闭屏幕，但防止系统进入睡眠状态，确保 Agent 持续运行"
-        )
-        
-        self.screen_off_check = QCheckBox("允许关闭显示器")
-        self.screen_off_check.setChecked(self.config.allow_screen_off)
-        self.screen_off_check.setEnabled(self.config.prevent_sleep)
-        self.screen_off_check.setToolTip(
-            "勾选后屏幕可以正常关闭以节省电量"
-        )
-        
-        # 联动：只有阻止睡眠时，允许关屏选项才有效
-        self.prevent_sleep_check.toggled.connect(
-            self.screen_off_check.setEnabled
-        )
-        
-        power_layout.addWidget(self.prevent_sleep_check)
-        power_layout.addWidget(self.screen_off_check)
-        power_group.setLayout(power_layout)
-        
-        self.layout().addWidget(power_group)
+    # 确保只有一个 Gateway 实例（防止多开冲突）
+def _ensure_single_gateway():
+    """使用 socket 端口锁确保单实例"""
+    import socket
+    try:
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.bind(('127.0.0.1', 28790))  # Gateway 专用端口
+        sock.listen(1)
+        return sock  # 保持引用，进程退出自动释放
+    except socket.error:
+        print("Gateway 已在运行")
+        import sys
+        sys.exit(1)
+
+def inject():
+    # ... 现有注入代码 ...
     
-    def save_settings(self):
-        self.config.prevent_sleep = self.prevent_sleep_check.isChecked()
-        self.config.allow_screen_off = self.screen_off_check.isChecked()
-        self.config.save()
+    if _is_gateway_mode():
+        # 1. 先确保单实例（防止多开冲突）
+        _gateway_lock = _ensure_single_gateway()
         
-        # 立即应用更改
-        if self.config.prevent_sleep:
-            power_manager.prevent_sleep(self.config.allow_screen_off)
-        else:
-            power_manager.allow_sleep()
+        # 2. 然后启动电源管理
+        if sys.platform == "win32":
+            from nanodesk.desktop.core.power_manager import prevent_sleep, start_power_monitor
+            prevent_sleep()
+            start_power_monitor()  # 启动电源监控轮询
 ```
+
+---
+
+## 文件变更
+
+| 文件 | 操作 | 说明 |
+|------|------|------|
+| `nanodesk/desktop/core/power_manager.py` | 新增 | 电源检测 + 睡眠控制 |
+| `nanodesk/desktop/windows/main_window.py` | 修改 | 根据电源状态显示不同提示 |
+| `nanodesk/bootstrap.py` | 修改 | Gateway 模式检测 + 单实例锁 + 电源管理 |
 
 ---
 
 ## 验证测试
 
-### 测试用例
-
-```python
-# tests/test_power_manager.py
-
-import time
-import pytest
-from nanodesk.desktop.core.power_manager import power_manager
-
-
-class TestPowerManager:
-    def test_prevent_sleep_allow_screen_off(self):
-        """测试阻止睡眠但允许关屏"""
-        result = power_manager.prevent_sleep(allow_screen_off=True)
-        assert result is True
-        assert power_manager.is_preventing is True
-        
-        # 恢复
-        power_manager.allow_sleep()
-        assert power_manager.is_preventing is False
-    
-    def test_singleton(self):
-        """测试单例模式"""
-        pm1 = PowerManager()
-        pm2 = PowerManager()
-        assert pm1 is pm2
-```
-
 ### 手动验证步骤
 
-1. **启动 Nanodesk**
-   - 观察日志: `[PowerManager] 阻止睡眠，允许关闭屏幕`
+#### 测试 A: 插电模式
+```powershell
+# 1. 确保电脑接电源
+# 2. 启动 Gateway
+# 观察日志: [Power] 已接电源，阻止睡眠以维持 Gateway 运行
 
-2. **关闭显示器**
-   - 按显示器电源按钮或 Win+L 锁屏
+# 3. 检查系统状态
+powercfg /requests
+# 应显示: [PROCESS] \Device\...\python.exe
 
-3. **等待 5 分钟**
-   - 从另一台设备发送飞书消息
-
-4. **验证响应**
-   - Agent 应该正常回复
-
-5. **检查系统状态**
-   ```powershell
-   powercfg /requests
-   # 应该显示 Nanodesk 正在阻止睡眠
-   ```
-
----
-
-## 用户提示设计
-
-### 启动时提示
-
-**系统托盘气泡**:
-```
-🟢 Agent 已启动
-已阻止系统睡眠，关闭屏幕后 Agent 仍会继续运行
+# 4. 关闭显示器，Agent 继续运行 ✓
 ```
 
-**聊天窗口系统消息** (可选):
-```
-✅ Agent 已启动
-💡 提示：系统已配置为阻止睡眠但允许关闭屏幕。
-   您可以放心关闭显示器，Agent 将在后台继续运行。
-   
-   如需修改此设置，请前往：设置 → 电源管理
-```
+#### 测试 B: 电池模式
+```powershell
+# 1. 拔掉电源（笔记本）
+# 2. 启动 Gateway
+# 观察日志: [Power] 未接电源（电量 XX%），不阻止睡眠以保护电池
+# 托盘提示: ⚠️ 未接电源...
 
-### 停止时提示
+# 3. 检查系统状态
+powercfg /requests
+# 应无任何阻止请求
 
-**系统托盘气泡**:
-```
-🔴 Agent 已停止
-已恢复系统睡眠设置，电脑将正常进入睡眠
-```
-
-### 设置变更提示
-
-当用户在设置面板修改电源选项时:
-```python
-if prevent_sleep_enabled:
-    show_message("已启用阻止睡眠，关闭屏幕后 Agent 将继续运行")
-else:
-    show_message("已禁用阻止睡眠，关闭屏幕后系统将正常睡眠")
+# 4. 关屏后电脑会正常睡眠 ✓
 ```
 
 ---
 
-## 实施步骤
+## 边界情况处理
 
-```
-Phase 1: 核心功能 (1-2 天)
-├── 创建 power_manager.py 模块
-├── 集成到 MainWindow (含启动/停止提示)
-└── 基础测试
-
-Phase 2: 配置界面 (2-3 天)  
-├── 添加配置项
-├── 设置面板集成
-└── 配置持久化
-
-Phase 3: 优化 (1 天)
-├── 添加系统托盘提示
-├── 完善日志
-└── 边界情况处理
-```
+| 情况 | 行为 |
+|------|------|
+| 程序崩溃 | atexit 确保恢复睡眠（最佳努力） |
+| 强制杀进程 | 可能无法恢复，下次启动自动重置 |
+| 多开 Gateway | ✅ **单实例锁阻止**，端口 28790 占用（多配置需求暂不支持） |
+| 运行中拔掉电源 | ✅ 自动检测（5分钟轮询），恢复睡眠 |
+| 运行中插上电源 | ✅ 自动检测，阻止睡眠 |
+| 系统强制睡眠 | Windows 会覆盖 API，无法阻止 |
 
 ---
 
-## 风险与应对
+## 设计决策记录
 
-| 风险 | 影响 | 应对 |
-|------|------|------|
-| API 调用失败 | 功能失效 | 失败时记录日志，不影响主程序 |
-| 忘记恢复睡眠 | 电池耗尽 | 确保 closeEvent 和 __del__ 中恢复 |
-| 多实例冲突 | 行为异常 | 单例模式 + 进程级锁 |
+| 考虑点 | 决策 | 原因 |
+|--------|------|------|
+| 是否需要配置项？ | ❌ 否 | 插电自动阻止，拔电自动允许 |
+| 是否需要设置面板？ | ❌ 否 | 无需用户干预 |
+| 是否需要手动开关？ | ❌ 否 | 插电即阻止，拔电即允许 |
+| 是否检测 CronJob？ | ❌ 否 | Gateway 运行时检测即可 |
+| 是否区分电源/电池？ | ✅ 是 | 保护笔记本电池 |
+| 是否支持多配置？ | ❌ 否 | 当前架构不支持，单实例足够 |
+| 单实例实现方式 | ✅ Socket 端口锁 | 简单可靠，跨进程有效 |
+
+---
+
+## 与原版设计的差异
+
+| 原版 | 当前简化版 |
+|------|-----------|
+| PowerManager 类 + 单例 | 函数 + 电源检测 |
+| 配置项 `prevent_sleep`, `allow_screen_off` | 无配置，自动判断 |
+| 设置面板集成 | 无设置面板 |
+| 托盘菜单开关 | 无手动开关 |
+| 电池模式检测 | ✅ **插电检测** |
+| CronJob 检测 | 不检测 |
+| 5 个 Phase（5天） | **1 个 Phase（0.5天）** |
 
 ---
 
 ## 下一步
 
-1. **确认方案**: 是否需要配置界面，还是默认开启即可？
-2. **开始实现**: 我可以先实现 Phase 1（核心功能）
-3. **测试验证**: 在你的机器上测试关屏后是否仍能保持运行
-
-需要我立即开始实现吗？
+- [ ] 实现 `power_manager.py`
+- [ ] 修改 `main_window.py` 集成
+- [ ] 修改 `bootstrap.py` 检测
+- [ ] 本地测试验证

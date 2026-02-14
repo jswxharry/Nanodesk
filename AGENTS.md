@@ -41,18 +41,8 @@
 | Branch | Purpose |
 |--------|---------|
 | `main` | Tracks upstream nanobot, used for submitting PRs, no direct development |
-| `nanodesk` | Main working branch, contains all personal customizations (default branch) |
+| `nanodesk` | Main working branch, contains all personal customizations (default branch)
 | `develop` | Development branch, features merged here first before nanodesk |
-
-#### Upstream Sync Workflow
-
-```
-upstream/main ──► main ──► develop ──► nanodesk (via PR)
-```
-
-1. **main**: 仅用于跟踪上游，直接 pull 上游更新
-2. **develop**: 先合并 main，测试验证
-3. **nanodesk**: 通过 PR 从 develop 合并（保护分支）
 
 ## Technology Stack
 
@@ -65,6 +55,7 @@ upstream/main ──► main ──► develop ──► nanodesk (via PR)
 - **Async**: asyncio + websockets
 - **Logging**: loguru
 - **Desktop GUI**: PySide6 (Windows desktop application)
+- **Browser Automation**: Playwright (for browser_search tool)
 
 ### Additional Tools
 
@@ -72,14 +63,18 @@ upstream/main ──► main ──► develop ──► nanodesk (via PR)
 - **Scheduling**: croniter
 - **Interactive CLI**: prompt-toolkit (history, paste support)
 - **Build System**: Hatchling (Python package), PyInstaller (desktop app)
-- **Channel SDKs**:
-  - python-telegram-bot (Telegram)
-  - lark-oapi (Feishu)
-  - dingtalk-stream (DingTalk)
-  - python-socketio (Mochat)
-  - slack-sdk (Slack)
-  - qq-botpy (QQ)
-  - discord.py (Discord)
+- **Code Quality**: ruff (linting and formatting)
+- **Testing**: pytest + pytest-asyncio
+
+### Channel SDKs
+
+- python-telegram-bot (Telegram)
+- lark-oapi (Feishu)
+- dingtalk-stream (DingTalk)
+- python-socketio (Mochat)
+- slack-sdk (Slack)
+- qq-botpy (QQ)
+- discord.py (Discord)
 
 ### WhatsApp Bridge
 
@@ -151,8 +146,8 @@ nanobot/                    # Core framework (upstream code)
 
 nanodesk/                   # Personal customization layer
 ├── __init__.py             # Module identifier
-├── bootstrap.py            # Startup injection logic (loads customizations, Windows encoding fix)
-├── launcher.py             # CLI entry point (nanodesk command, UTF-8 encoding setup)
+├── bootstrap.py            # Startup injection logic (loads customizations)
+├── launcher.py             # CLI entry point (nanodesk command)
 ├── desktop/                # Windows desktop application
 │   ├── main.py             # GUI entry point
 │   ├── windows/            # Window components
@@ -161,36 +156,41 @@ nanodesk/                   # Personal customization layer
 │   ├── core/               # Core functionality
 │   │   ├── config_manager.py   # Config management (with DPAPI encryption)
 │   │   ├── process_manager.py  # Gateway process management
-│   │   └── log_handler.py      # Log system
+│   │   ├── log_handler.py      # Log system
+│   │   ├── system_tray.py      # System tray icon
+│   │   └── gateway_service.py  # Gateway service wrapper
 │   └── resources/          # Icons and assets
 ├── channels/               # Custom channels
 ├── tools/                  # Custom tools
+│   ├── browser_search.py   # Playwright-based browser search
+│   └── ddg_search.py       # DuckDuckGo search tool
 ├── skills/                 # Custom skills
 ├── providers/              # Custom LLM adapters
 ├── patches/                # Core patches if needed
 ├── scripts/                # Helper scripts
-│   ├── build_all.ps1           # One-click desktop build
-│   ├── prepare_embedded_python.py  # Prepare embedded Python
-│   ├── sync-upstream.ps1/.sh   # Sync upstream updates
-│   └── extract-contrib.sh/.ps1 # Extract contribution commits
+│   └── README.md           # Build instructions
 └── docs/                   # Documentation (Chinese)
     ├── ARCHITECTURE.md     # Project structure and Git workflow
     ├── BUILD.md            # Desktop build guide
-    ├── DESKTOP_APP_PLAN.md # Development plan
+    ├── CONFIGURATION.md    # Configuration guide
+    ├── FEISHU_SETUP.md     # Feishu setup guide
+    ├── BRANCHING.md        # Git branching strategy
     └── ...
 
 bridge/                     # WhatsApp Node.js bridge
 ├── src/
 │   ├── index.ts            # Entry point
 │   ├── server.ts           # WebSocket server
-│   └── whatsapp.ts         # Baileys client
+│   ├── whatsapp.ts         # Baileys client
+│   └── types.d.ts          # TypeScript type definitions
 ├── package.json
 └── tsconfig.json
 
 tests/                      # Test suite
 ├── test_tool_validation.py # Tool parameter validation tests
 ├── test_email_channel.py   # Email channel tests
-└── test_cli_input.py       # CLI input tests
+├── test_cli_input.py       # CLI input tests
+└── ...
 
 workspace/                  # Default workspace (created at runtime)
 ```
@@ -214,6 +214,7 @@ MessageBus ← Channel ← Response ← AgentLoop
    - Builds context (history + memory + skills + system prompt)
    - Iterates with LLM until no tool calls (max 20 iterations)
    - Persists conversations to sessions
+   - Memory consolidation: archives old messages to MEMORY.md + HISTORY.md
 
 2. **MessageBus** (`nanobot/bus/queue.py`): Async message routing
    - Inbound queue (user → agent)
@@ -262,15 +263,19 @@ nanodesk agent
 
 # Start gateway (connects to enabled channels)
 nanodesk gateway
+
+# Show status
+nanodesk status
 ```
 
 ### Windows Desktop Application
 
 ```powershell
-# One-click build (includes embedded Python)
-.\nanodesk\scripts\build_all.ps1 -Clean
+# Install PySide6 and build tools first
+pip install pyside6 pyinstaller
 
-# Output: dist/Nanodesk/ folder (portable) + dist/Nanodesk-Setup-x.x.x.exe (installer)
+# Build desktop app (see nanodesk/docs/BUILD.md for detailed steps)
+# Output: dist/Nanodesk/ folder (portable) + installer
 
 # Run desktop app directly (requires Python + PySide6)
 python -m nanodesk.desktop.main
@@ -400,23 +405,15 @@ class Config(BaseSettings):
 from nanobot.agent.tools.base import Tool
 
 class MyTool(Tool):
-    @property
-    def name(self) -> str:
-        return "my_tool"
-    
-    @property
-    def description(self) -> str:
-        return "Describe your tool functionality"
-    
-    @property
-    def parameters(self) -> dict[str, Any]:
-        return {
-            "type": "object",
-            "properties": {
-                "param": {"type": "string"}
-            },
-            "required": ["param"]
-        }
+    name = "my_tool"
+    description = "Describe your tool functionality"
+    parameters = {
+        "type": "object",
+        "properties": {
+            "param": {"type": "string"}
+        },
+        "required": ["param"]
+    }
     
     async def execute(self, **kwargs) -> str:
         return "execution result"
@@ -424,17 +421,19 @@ class MyTool(Tool):
 
 2. **Register in bootstrap.py**:
 
-Tools are auto-registered via monkey-patch in `bootstrap.py`. Add your tool to `_register_with_custom_tools()`:
-
 ```python
 # nanodesk/bootstrap.py
-def _register_with_custom_tools(self):
-    """Register default tools plus custom tools."""
-    original_register(self)
+from nanodesk.tools.my_tool import MyTool
+from nanobot.agent.loop import AgentLoop
+
+def _patch_agent_loop():
+    original_register = AgentLoop._register_default_tools
     
-    # Add your custom tool here
-    from nanodesk.tools.my_tool import MyTool
-    self.tools.register(MyTool())
+    def _register_with_custom_tools(self):
+        original_register(self)
+        self.tools.register(MyTool())
+    
+    AgentLoop._register_default_tools = _register_with_custom_tools
 ```
 
 ### Adding Upstream LLM Providers
@@ -519,12 +518,15 @@ docker run -v ~/.nanobot:/root/.nanobot -p 18790:18790 nanodesk gateway
 
 ### Windows Desktop (Portable)
 
-```powershell
-# Build with embedded Python
-.\nanodesk\scripts\build_all.ps1 -Clean
+See `nanodesk/docs/BUILD.md` for detailed instructions.
 
-# Distribute dist/Nanodesk/ folder (portable, no Python required)
-# Or use dist/Nanodesk-Setup-*.exe installer
+```powershell
+# One-click build (includes embedded Python)
+# Requires: Python 3.11+, PySide6, PyInstaller, 7-Zip, NSIS
+
+# Output:
+# - dist/Nanodesk/ (portable folder, no Python required)
+# - dist/Nanodesk-Setup-*.exe (installer)
 ```
 
 ### PyPI Distribution (Upstream)
@@ -567,38 +569,15 @@ rm -rf ~/.nanobot/sessions/
 rm ~/.nanobot/config.json
 ```
 
-### Windows Terminal Encoding
-
-If you see `UnicodeEncodeError: 'gbk' codec can't encode character` on Windows, the launcher automatically detects and switches to UTF-8. To fix permanently:
-
-```powershell
-# Set system environment variable (run once)
-[Environment]::SetEnvironmentVariable("PYTHONIOENCODING", "utf-8", "User")
-```
-
-Or manually add `PYTHONIOENCODING=utf-8` to your system environment variables.
-
 ### Sync Upstream Updates
 
 ```powershell
 # Windows
-.\nanodesk\scripts\sync-upstream.ps1
+# Use Git to sync upstream/main into local main, then merge to develop
 
 # Linux/macOS
 ./nanodesk/scripts/sync-upstream.sh
 ```
-
-### Extract Contribution Commits
-
-```powershell
-# Windows
-.\nanodesk\scripts\extract-contrib.ps1 <commit-hash>
-
-# Linux/macOS
-./nanodesk/scripts/extract-contrib.sh <commit-hash>
-```
-
-Then create PR to `HKUDS/nanobot` from the `main` branch.
 
 ## VS Code Debugging
 

@@ -314,5 +314,5 @@ git push -u origin develop
 
 - [ARCHITECTURE.md](./ARCHITECTURE.md) - 项目架构
 - [SYNC_WORKFLOW.md](./SYNC_WORKFLOW.md) - 上游同步流程
-- [COMMIT_RULES.md](./COMMIT_RULES.md) - 提交规范
+- [CONTRIBUTING.md](./CONTRIBUTING.md) - 提交规范
 - [VERSIONING.md](./VERSIONING.md) - 版本管理

@@ -16,7 +16,7 @@
 |--------|------|------|------|------|
 | ⭐⭐⭐ | **本地知识检索** | 🔴 待设计 | [discussion/2026-02-14-core-philosophy-and-features.md](./discussion/2026-02-14-core-philosophy-and-features.md) | 最痛的点：Agent 无法回答"我之前说过什么" |
 | ⭐⭐⭐ | **工具执行即时反馈** | 📝 设计完成 | [TOOL_EXECUTION_FEEDBACK.md](./design/TOOL_EXECUTION_FEEDBACK.md) | 解决"执行后无响应"的 UX 问题 |
-| ⭐⭐⭐ | **关屏保持运行** | 📝 设计完成 | [PREVENT_SLEEP_KEEP_RUNNING.md](./design/PREVENT_SLEEP_KEEP_RUNNING.md) | Windows 电源管理，关屏后 Agent 继续运行 |
+| ⭐⭐⭐ | **关屏保持运行** | ✅ 已完成 | [PREVENT_SLEEP_KEEP_RUNNING.md](./design/PREVENT_SLEEP_KEEP_RUNNING.md) | Windows 电源管理，已实现 + 测试文档 |
 | ⭐⭐ | Windows 截图工具 | 📋 待开发 | - | 飞书指令截图 |
 | ⭐⭐ | **Agent 依赖自动安装** | 📋 待评估 | - | 允许 Agent 执行 pip install 等命令安装缺失依赖 |
 
@@ -53,7 +53,7 @@
 ## 待合并
 
 - [x] ~~合并 `develop` → `nanodesk`（测试已通过，等待执行）~~ ✅ 2026-02-14 完成
-- [ ] 合并 `develop` → `nanodesk`（BRANCHING.md Squash 合并指南更新）
+- [x] 合并 `develop` → `nanodesk`（BRANCHING.md Squash 合并指南更新）✅ 已完成
 
 ---
 

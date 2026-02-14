@@ -289,9 +289,8 @@ class MainWindow(QMainWindow):
         # Process manager signals
         self.process_manager.status_changed.connect(self._on_status_changed)
         self.process_manager.error_occurred.connect(self._on_error)
-        self.process_manager.log_message.connect(self._on_log_message)
 
-        # Log handler
+        # Log handler (single source for all log messages)
         self.log_handler.log_received.connect(self._on_log_message)
 
     def _check_first_run(self):
@@ -341,8 +340,47 @@ class MainWindow(QMainWindow):
 
             if running:
                 self.status_bar.showMessage("Gateway 运行中")
+                # Show power status notification
+                self._show_power_status_notification()
             else:
                 self.status_bar.showMessage("Gateway 已停止")
+                # Show sleep restore notification on stop
+                self.tray.showMessage(
+                    "Nanodesk",
+                    "🔴 Gateway 已停止\n电脑将正常进入睡眠",
+                    self.tray.Information,
+                    3000,
+                )
+
+    def _show_power_status_notification(self):
+        """Show power status notification (Windows only)"""
+        import sys
+
+        if sys.platform != "win32":
+            return
+
+        try:
+            from nanodesk.desktop.core.power_manager import should_prevent_sleep
+
+            should_prevent, reason = should_prevent_sleep()
+
+            if should_prevent:
+                self.tray.showMessage(
+                    "Nanodesk",
+                    "🟢 Gateway 已启动\n已接电源，可关闭屏幕保持运行",
+                    self.tray.Information,
+                    5000,
+                )
+            else:
+                self.tray.showMessage(
+                    "Nanodesk",
+                    f"⚠️ Gateway 已启动\n{reason}",
+                    self.tray.Warning,
+                    5000,
+                )
+        except Exception:
+            # Power detection failed, silently ignore
+            pass
 
     @Slot(str)
     def _on_error(self, message: str):
