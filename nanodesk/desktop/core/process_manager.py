@@ -197,7 +197,6 @@ class ProcessManager(QObject):
 
     # Signals
     status_changed = Signal(str, bool)  # service_name, is_running
-    log_message = Signal(str)  # log line
     error_occurred = Signal(str)  # error message
 
     def __init__(self, parent=None):
@@ -213,7 +212,6 @@ class ProcessManager(QObject):
 
     def _on_log_line(self, line: str):
         """Handle log line from thread."""
-        self.log_message.emit(line)
         self._log_handler.write(line, "INFO")
 
     def _on_finished(self, success: bool, error: str):

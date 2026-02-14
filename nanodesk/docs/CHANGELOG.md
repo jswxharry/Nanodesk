@@ -2,7 +2,7 @@
 
 > 记录版本发布历史和功能变更
 > 
-> 最后更新：2026-02-14
+> 最后更新：2026-02-15
 
 ---
 
@@ -13,6 +13,47 @@
 - **Windows 终端编码兼容** - 自动检测并切换 UTF-8 编码，避免 `UnicodeEncodeError`
   - `launcher.py` - 启动时检测编码，自动切换到 UTF-8
   - `bootstrap.py` - 设置 `PYTHONIOENCODING=utf-8`，替换 `__logo__` 为 ASCII 版本
+
+---
+
+## [v0.2.2] - 2026-02-15
+
+### 新增功能
+
+- **Windows 电源管理** - Gateway 运行时阻止睡眠，关屏保持运行
+  - AC 电源：自动阻止系统睡眠（5 分钟轮询检测电源变化）
+  - 电池模式：允许正常睡眠，保护电池
+  - 系统托盘通知：显示当前电源状态和睡眠行为
+  - 文件：`power_manager.py` (~150 行)
+
+- **Gateway 单实例锁** - 防止重复启动多个 Gateway
+  - Socket 端口 28790 绑定实现
+  - 第二个实例自动检测并退出
+  - 进程崩溃/退出后端口自动释放
+
+### 修复
+
+- **日志重复打印** - 移除 `log_message` 信号重复连接
+  - `main_window.py` - 统一使用 `log_received` 信号
+  - `process_manager.py` - 移除冗余信号发射
+
+### 测试
+
+- **自动化测试**：通过 10/10
+  - `test_power_management.py` - 电源管理模块测试
+  - 包含：单实例锁、线程安全、API 测试等
+
+- **手动测试**：通过 3/3
+  1. 插电阻止睡眠 - powercfg 验证
+  2. 电池允许睡眠 - 电源计划验证
+  3. 单实例锁 - 双终端启动验证
+
+### 文档
+
+- **测试报告**：`test-report-20260215-v0.2.2-power-management.md`
+- **AGENTS.md**：更新 `core_agent_lines.sh` 路径
+- **AI_COLLABORATION.md**：更新脚本路径
+- **BRANCHING.md**：更新脚本路径
 
 ---
 
@@ -58,23 +99,6 @@
 ### 测试
 
 - AI 自动化测试：通过（85.7%）
-
----
-
-## [v0.2.2-dev] - 2026-02-14
-
-### 理念调整
-
-- **核心理念**: 从"轻量框架"调整为"实用个人助手"
-- **原则**: Practicality first, lightweight second（实用优先，轻量为辅）
-- **目标**: 开箱即用，保持代码可控
-- **记录**: [discussion/2026-02-14-core-philosophy-and-features.md](./discussion/2026-02-14-core-philosophy-and-features.md)
-
-### 设计文档
-
-- 工具执行即时反馈、关屏保持运行、搜索强化等 5 个设计提案
-- 手动测试：核心功能全部通过
-- 测试报告：[test-report-20260213-final.md](./testing/reports/test-report-20260213-final.md)
 
 ---
 
