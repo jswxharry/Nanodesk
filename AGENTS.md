@@ -44,12 +44,15 @@
 | `nanodesk` | Main working branch, contains all personal customizations (default branch) |
 | `develop` | Development branch, features merged here first before nanodesk |
 
-### Branch Strategy
+#### Upstream Sync Workflow
 
-| Branch | Purpose |
-|--------|---------|
-| `main` | Tracks upstream nanobot, used for submitting PRs, no direct development |
-| `nanodesk` | Main working branch, contains all personal customizations (default branch) |
+```
+upstream/main ──► main ──► develop ──► nanodesk (via PR)
+```
+
+1. **main**: 仅用于跟踪上游，直接 pull 上游更新
+2. **develop**: 先合并 main，测试验证
+3. **nanodesk**: 通过 PR 从 develop 合并（保护分支）
 
 ## Technology Stack
 
@@ -148,8 +151,8 @@ nanobot/                    # Core framework (upstream code)
 
 nanodesk/                   # Personal customization layer
 ├── __init__.py             # Module identifier
-├── bootstrap.py            # Startup injection logic (loads customizations)
-├── launcher.py             # CLI entry point (nanodesk command)
+├── bootstrap.py            # Startup injection logic (loads customizations, Windows encoding fix)
+├── launcher.py             # CLI entry point (nanodesk command, UTF-8 encoding setup)
 ├── desktop/                # Windows desktop application
 │   ├── main.py             # GUI entry point
 │   ├── windows/            # Window components
@@ -421,12 +424,17 @@ class MyTool(Tool):
 
 2. **Register in bootstrap.py**:
 
+Tools are auto-registered via monkey-patch in `bootstrap.py`. Add your tool to `_register_with_custom_tools()`:
+
 ```python
 # nanodesk/bootstrap.py
-from nanodesk.tools.my_tool import MyTool
-from nanobot.agent.tools.registry import ToolRegistry
-
-ToolRegistry.register(MyTool())
+def _register_with_custom_tools(self):
+    """Register default tools plus custom tools."""
+    original_register(self)
+    
+    # Add your custom tool here
+    from nanodesk.tools.my_tool import MyTool
+    self.tools.register(MyTool())
 ```
 
 ### Adding Upstream LLM Providers
@@ -558,6 +566,17 @@ rm -rf ~/.nanobot/sessions/
 # Delete config (re-run onboard)
 rm ~/.nanobot/config.json
 ```
+
+### Windows Terminal Encoding
+
+If you see `UnicodeEncodeError: 'gbk' codec can't encode character` on Windows, the launcher automatically detects and switches to UTF-8. To fix permanently:
+
+```powershell
+# Set system environment variable (run once)
+[Environment]::SetEnvironmentVariable("PYTHONIOENCODING", "utf-8", "User")
+```
+
+Or manually add `PYTHONIOENCODING=utf-8` to your system environment variables.
 
 ### Sync Upstream Updates
 

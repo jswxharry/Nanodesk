@@ -40,6 +40,12 @@
 |------|------|
 | [discussion/2026-02-14-core-philosophy-and-features.md](./discussion/2026-02-14-core-philosophy-and-features.md) | 核心理念调整与功能规划 |
 
+## 🐛 Bug 记录
+
+| 文档 | 说明 | 状态 |
+|------|------|------|
+| [bugs/BUG-001-memory-consolidation-type-error.md](./bugs/BUG-001-memory-consolidation-type-error.md) | 内存整合类型错误（上游 bug） | 🔴 待修复 |
+
 ## 🧪 测试文档
 
 | 文档 | 说明 |

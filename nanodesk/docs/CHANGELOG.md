@@ -6,6 +6,16 @@
 
 ---
 
+## [Unreleased] - develop
+
+### 修复
+
+- **Windows 终端编码兼容** - 自动检测并切换 UTF-8 编码，避免 `UnicodeEncodeError`
+  - `launcher.py` - 启动时检测编码，自动切换到 UTF-8
+  - `bootstrap.py` - 设置 `PYTHONIOENCODING=utf-8`，替换 `__logo__` 为 ASCII 版本
+
+---
+
 ## [v0.2.1] - 2026-02-13
 
 ### 新增功能

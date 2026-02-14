@@ -7,7 +7,8 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
-$ProjectRoot = Split-Path (Split-Path $PSScriptRoot)
+# nanodesk/scripts/build/ → project root (3 levels up)
+$ProjectRoot = Split-Path (Split-Path (Split-Path $PSScriptRoot))
 $DesktopDir = Join-Path (Join-Path $ProjectRoot "nanodesk") "desktop"
 $BuildRoot = Join-Path $ProjectRoot "build_desktop"
 $EmbeddedDir = Join-Path $BuildRoot "embedded_python"

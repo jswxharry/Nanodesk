@@ -184,9 +184,9 @@ def prepare_embedded_python(build_dir: Path, project_root: Path) -> Path:
 
 
 if __name__ == "__main__":
-    # Determine project root
+    # Determine project root (nanodesk/scripts/build/ → project root)
     script_dir = Path(__file__).parent
-    project_root = script_dir.parent.parent
+    project_root = script_dir.parent.parent.parent
     
     # Build directory
     build_dir = project_root / "build_desktop"

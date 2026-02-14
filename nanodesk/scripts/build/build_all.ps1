@@ -9,7 +9,8 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
-$ProjectRoot = Split-Path (Split-Path $PSScriptRoot)
+# nanodesk/scripts/build/ → project root (3 levels up)
+$ProjectRoot = Split-Path (Split-Path (Split-Path $PSScriptRoot))
 $ScriptRoot = $PSScriptRoot
 
 Write-Host ""
