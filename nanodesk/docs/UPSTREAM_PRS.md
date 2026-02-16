@@ -2,7 +2,7 @@
 
 > 跟踪 HKUDS/nanobot 原库的重要 PR，评估对 Nanodesk 的价值和合并优先级
 > 
-> 最后更新：2026-02-14
+> 最后更新：2026-02-16
 
 ---
 
@@ -184,6 +184,42 @@
 
 ---
 
+## 我们提交给上游的 PR 🚀
+
+> 跟踪 Nanodesk 提交给上游原库的 PR
+
+### PR #644 - 内存整合类型修复
+| 属性 | 内容 |
+|------|------|
+| **链接** | https://github.com/HKUDS/nanobot/pull/644 |
+| **状态** | **Open** 📝 已提交，等待合并 |
+| **功能** | 修复内存整合时非字符串值导致的 TypeError |
+
+**问题**：
+- `_consolidate_memory()` 期望字符串值，但 LLM 可能返回 dict/list 对象
+- 导致 `TypeError: data must be str, not dict`
+- 内存整合失败，旧消息无法归档到 HISTORY.md
+
+**解决方案**：
+1. **Prompt 优化**：明确要求返回字符串值，提供示例
+2. **代码防御**：添加类型检查，使用 `json.dumps()` 转换非字符串值
+
+**修改文件**：
+- `nanobot/agent/loop.py` - 更新 prompt 和添加类型检查
+- `tests/test_memory_consolidation_types.py` - 新增 133 行测试（7 个测试用例）
+
+**对上游价值**：⭐⭐⭐⭐⭐
+- 修复稳定性问题，避免内存整合失败
+- 向后兼容，不影响正常流程
+- 包含完整测试覆盖
+
+**当前状态**：
+- ✅ 已在 Nanodesk `main`/`develop` 分支合并 (`b523b27`)
+- ⏳ 等待上游维护者 review 和合并
+- 📝 下次同步上游时若已合并，可标记为完成
+
+---
+
 ## 已覆盖/低价值 PR ⭐（无需关注）
 
 ### PR #94 - Feishu + MiniMax
@@ -250,6 +286,7 @@
 | #94 | ⭐⭐ | Open | ⚪ 无 | 已有实现 |
 | #328 | ⭐⭐ | Open | ⚪ 无 | 被 #272 覆盖 |
 | #126 | ⭐ | Open | ⚪ 无 | 无需关注 |
+| #644 | ⭐⭐⭐⭐ | Open 📝 | 🟡 中 | Nanodesk 已合并，等待上游合并 |
 
 ---
 
@@ -263,6 +300,11 @@ open https://github.com/HKUDS/nanobot/pulls
 # 同步上游时检查
 ./nanodesk/scripts/git/sync-upstream.ps1
 ```
+
+### 当我们提交的 PR 被上游合并时
+1. 更新此文档，将 PR 状态改为 ✅ 已合并
+2. 下次同步上游时，确认代码一致
+3. 可选择删除本地补丁（如果与上游完全一致）
 
 ### 当高优先级 PR 合并时
 1. 立即运行 `sync-upstream.ps1`
