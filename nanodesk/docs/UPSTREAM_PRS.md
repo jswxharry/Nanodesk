@@ -2,7 +2,7 @@
 
 > 跟踪 HKUDS/nanobot 原库的重要 PR，评估对 Nanodesk 的价值和合并优先级
 > 
-> 最后更新：2026-02-16
+> 最后更新：2026-02-16（本次更新：添加 Ollama Provider 特别关注）
 
 ---
 
@@ -59,7 +59,7 @@
 - ✅ `UsageMonitor` - 月度预算和告警阈值
 - ✅ `nanobot usage` CLI 命令 - 日/周/月统计
 - ✅ **`UsageTool` - Agent 自我感知 token 消耗** ← 与上下文显示相关
-- ✅ Ollama Provider 支持（本地 LLM）
+- ✅ **Ollama Provider 支持（本地 LLM）** ← ⚠️ **Nanodesk 已实现，关注上游实现差异**
 - ✅ NVIDIA Provider 支持
 - ✅ Shell 安全加固（命令黑名单、目录限制）
 - ✅ Alarm 工具（定时提醒）
@@ -68,7 +68,7 @@
 - ~~解决了我们之前想自行实现的功能~~ ✅ 已实现
 - `UsageTool` 可被用户调用来查询 token 使用情况
 - 但我们的设计 [CONTEXT_SIZE_DISPLAY.md](../design/CONTEXT_SIZE_DISPLAY.md) 是**自动显示**，无需用户主动查询
-- 包含 Ollama 本地模型支持（隐私+省钱）
+- **⚠️ Ollama Provider**：Nanodesk 已在 `nanodesk/providers/` 实现临时方案，PR #257 合并后可评估替换
 - Shell 安全加固提升生产环境安全性
 
 **跟进策略**：
@@ -77,7 +77,21 @@
 - 功能完整度高，合并后可直接使用
 - **风险**: PR 已开放较久，可能因 review 意见需要调整
 
+**Ollama 特别关注** ⚠️：
+| 对比项 | Nanodesk 当前实现 | PR #257 预期实现 |
+|--------|-------------------|------------------|
+| 位置 | `nanodesk/providers/ollama_provider.py` | `nanobot/providers/ollama_provider.py` |
+| 配置方式 | `provider: "ollama"` | 待确认 |
+| 模型名格式 | `qwen2.5:3b` (无前缀) | 待确认 |
+| 状态 | ✅ 已可用 | 📝 待合并 |
+
+**行动计划**：
+1. PR #257 合并后，对比上游 Ollama 实现与我们当前的差异
+2. 评估是否保留 Nanodesk 层实现或切换到上游实现
+3. 确保配置格式兼容或提供迁移指南
+
 **关联**: [CONTEXT_SIZE_DISPLAY.md](../design/CONTEXT_SIZE_DISPLAY.md)
+- [Ollama 配置指南](../setup/OLLAMA.md)
 
 ---
 
