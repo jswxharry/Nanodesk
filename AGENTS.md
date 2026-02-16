@@ -44,6 +44,23 @@
 | `nanodesk` | Main working branch, contains all personal customizations (default branch)
 | `develop` | Development branch, features merged here first before nanodesk |
 
+---
+
+## ⚠️ Important Rules for AI Assistants
+
+### 1. **No Automatic Commits** (Critical)
+
+**NEVER commit or push changes without explicit user approval!**
+
+- ❌ **DO NOT** run `git commit` or `git push` automatically
+- ❌ **DO NOT** commit temporary files (e.g., `PR_DESCRIPTION.md`, drafts, notes)
+- ❌ **DO NOT** assume "it looks good" means commit
+- ✅ **MUST WAIT** for explicit approval: "提交", "commit", "push", "可以了"
+
+**If in doubt, ASK**: "是否可以将更改提交到仓库？"
+
+---
+
 ## Technology Stack
 
 ### Core Dependencies
