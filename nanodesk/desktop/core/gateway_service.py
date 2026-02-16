@@ -83,18 +83,48 @@ class GatewayService(QObject):
 
             # Get provider
             provider_name = config.agents.defaults.provider
-            provider_config = getattr(config.providers, provider_name, None)
-
-            if provider_config and provider_config.api_key:
-                provider = LiteLLMProvider(
-                    api_key=provider_config.api_key,
-                    api_base=provider_config.api_base or None,
+            
+            # Check for Ollama provider
+            if provider_name == "ollama":
+                from nanodesk.providers.ollama_provider import OllamaProvider
+                
+                # Load config file directly to get ollama settings
+                import json
+                from pathlib import Path
+                
+                ollama_api_key = "not-needed"
+                ollama_api_base = "http://localhost:11434"
+                
+                config_file = Path.home() / ".nanobot" / "config.json"
+                if config_file.exists():
+                    try:
+                        with open(config_file, 'r', encoding='utf-8') as f:
+                            file_config = json.load(f)
+                        ollama_provider = file_config.get("providers", {}).get("ollama", {})
+                        ollama_api_key = ollama_provider.get("apiKey") or ollama_provider.get("api_key", "not-needed") or "not-needed"
+                        ollama_api_base = ollama_provider.get("apiBase") or ollama_provider.get("api_base", "http://localhost:11434") or "http://localhost:11434"
+                    except Exception as e:
+                        self.log_message.emit(f"[WARN] Failed to load Ollama config: {e}")
+                
+                self.log_message.emit(f"[INFO] Using Ollama provider with model: {config.agents.defaults.model}")
+                provider = OllamaProvider(
+                    api_key=ollama_api_key,
+                    api_base=ollama_api_base,
                     default_model=config.agents.defaults.model,
-                    provider_name=provider_name,
                 )
             else:
-                # Fallback to default
-                provider = LiteLLMProvider(default_model=config.agents.defaults.model)
+                provider_config = getattr(config.providers, provider_name, None)
+
+                if provider_config and provider_config.api_key:
+                    provider = LiteLLMProvider(
+                        api_key=provider_config.api_key,
+                        api_base=provider_config.api_base or None,
+                        default_model=config.agents.defaults.model,
+                        provider_name=provider_name,
+                    )
+                else:
+                    # Fallback to default
+                    provider = LiteLLMProvider(default_model=config.agents.defaults.model)
 
             # Create agent
             agent = AgentLoop(

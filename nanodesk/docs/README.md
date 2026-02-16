@@ -6,11 +6,23 @@
 
 ## 🚀 快速开始
 
+### 📖 配置指南（必读）
+
+用户配置文档已整理到 [setup/](./setup/) 目录：
+
+| 文档 | 说明 |
+|------|------|
+| [setup/README.md](./setup/README.md) | 配置总览和快速导航 |
+| [setup/OLLAMA.md](./setup/OLLAMA.md) | Ollama 本地模型配置（推荐 Qwen2.5:3b） |
+| [setup/FEISHU.md](./setup/FEISHU.md) | 飞书机器人配置指南 |
+| [setup/CONFIGURATION.md](./setup/CONFIGURATION.md) | 通用配置选项参考 |
+| [setup/OLLAMA_INSTALL.md](./setup/OLLAMA_INSTALL.md) | Ollama Windows 安装指南（D盘迁移等） |
+
+### 🔧 其他文档
+
 | 文档 | 说明 |
 |------|------|
 | [BUILD.md](./BUILD.md) | 构建 Windows 桌面应用（含嵌入 Python 打包）|
-| [CONFIGURATION.md](./CONFIGURATION.md) | 配置指南（手动配置 + 桌面应用配置参考）|
-| [FEISHU_SETUP.md](./FEISHU_SETUP.md) | 飞书机器人完整配置指南 |
 | [WINDOWS_LONG_RUNNING.md](./WINDOWS_LONG_RUNNING.md) | Windows 长时间运行配置（解决睡眠断连问题） |
 
 ---

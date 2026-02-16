@@ -280,6 +280,57 @@ This file stores important information that should persist across sessions.
 
 def _make_provider(config):
     """Create LiteLLMProvider from config. Exits if no API key found."""
+    # Check for Ollama provider - try to read from config file directly
+    # because AgentDefaults may not have provider field if not patched
+    provider_name = getattr(config.agents.defaults, 'provider', None)
+    
+    # Fallback: read from file if provider field not set
+    if provider_name is None:
+        import json
+        from pathlib import Path
+        config_file = Path.home() / ".nanobot" / "config.json"
+        if config_file.exists():
+            try:
+                with open(config_file, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+                provider_name = data.get("agents", {}).get("defaults", {}).get("provider")
+            except Exception:
+                pass
+    
+    if provider_name == "ollama":
+        # Load Ollama provider from nanodesk
+        import json
+        from pathlib import Path
+        
+        ollama_api_key = "not-needed"
+        ollama_api_base = "http://localhost:11434"
+        
+        config_file = Path.home() / ".nanobot" / "config.json"
+        if config_file.exists():
+            try:
+                with open(config_file, 'r', encoding='utf-8') as f:
+                    file_config = json.load(f)
+                ollama_provider = file_config.get("providers", {}).get("ollama", {})
+                ollama_api_key = ollama_provider.get("apiKey") or ollama_provider.get("api_key", "not-needed") or "not-needed"
+                ollama_api_base = ollama_provider.get("apiBase") or ollama_provider.get("api_base", "http://localhost:11434") or "http://localhost:11434"
+            except Exception:
+                pass
+        
+        console.print(f"[INFO] Using Ollama provider with model: {config.agents.defaults.model}")
+        
+        # Import OllamaProvider from nanodesk
+        try:
+            from nanodesk.providers.ollama_provider import OllamaProvider
+            return OllamaProvider(
+                api_key=ollama_api_key,
+                api_base=ollama_api_base,
+                default_model=config.agents.defaults.model,
+            )
+        except ImportError:
+            console.print("[red]Error: OllamaProvider not found. Please ensure nanodesk is properly installed.[/red]")
+            raise typer.Exit(1)
+    
+    # Default: LiteLLMProvider
     from nanobot.providers.litellm_provider import LiteLLMProvider
     p = config.get_provider()
     model = config.agents.defaults.model

@@ -17,14 +17,21 @@ else:
 
 def main():
     """Start the Gateway."""
-    # Inject nanodesk customizations
+    # Inject nanodesk customizations FIRST (before any nanobot imports)
+    import sys
+    from pathlib import Path
+    
+    # Add project root to path
+    root = Path(__file__).parent.parent.parent
+    if str(root) not in sys.path:
+        sys.path.insert(0, str(root))
+    
+    # Now inject
     from nanodesk import bootstrap
-
     bootstrap.inject()
 
-    # Import and run gateway command
+    # Import and run gateway command (AFTER injection)
     from click.testing import CliRunner
-
     from nanobot.cli.commands import app
 
     # Run gateway command

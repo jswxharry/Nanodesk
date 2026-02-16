@@ -44,14 +44,19 @@ def main():
     # 0. Setup encoding first (before any output)
     _setup_windows_encoding()
 
-    # 1. Inject Nanodesk customization
-    from nanodesk import bootstrap
+    # 1. Add project root to path (before any imports)
+    import sys
+    from pathlib import Path
+    root = Path(__file__).parent.parent
+    if str(root) not in sys.path:
+        sys.path.insert(0, str(root))
 
+    # 2. Inject Nanodesk customization (BEFORE importing nanobot)
+    from nanodesk import bootstrap
     bootstrap.inject()
 
-    # 2. Start nanobot CLI
+    # 3. Start nanobot CLI (AFTER injection)
     from nanobot.cli.commands import app
-
     app()
 
 

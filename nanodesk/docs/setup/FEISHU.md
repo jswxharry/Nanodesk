@@ -223,7 +223,28 @@ INFO - Feishu bot started with WebSocket long connection
 2. 检查「已添加事件」是否有 `im.message.receive_v1`
 3. **重新发布应用**（关键！）
 
-### 问题 3：订阅方式保存不了
+### 问题 3：日志显示「应用尚未开通所需的应用身份权限：[im:message, im:message.reactions:write_only]」
+
+**现象**：日志中出现以下警告，但不影响消息收发
+```
+Failed to add reaction: code=99991672, msg=Access denied. 
+One of the following scopes is required: [im:message, im:message.reactions:write_only].
+应用尚未开通所需的应用身份权限：[im:message, im:message.reactions:write_only]
+```
+
+**原因**：Nanodesk 尝试为消息添加「✓」表情反应，表示正在处理，但缺少表情反应权限
+
+**解决**（可选，不影响使用）：
+1. 进入飞书开放平台 → 你的应用 →「权限管理」
+2. 搜索并开通以下任一权限：
+   - `im:message`（以应用身份读写消息）
+   - `im:message.reactions:write_only`（添加消息表情回复）
+3. 重新发布应用
+4. 重启 Nanodesk Gateway
+
+> 💡 **注意**：此错误不影响机器人正常对话功能，只是缺少「正在处理」的表情提示。
+
+### 问题 4：订阅方式保存不了
 
 **现象**：点击订阅方式保存没有反应
 
@@ -234,7 +255,7 @@ INFO - Feishu bot started with WebSocket long connection
 2. 刷新页面
 3. 再配置订阅方式
 
-### 问题 4：修改配置后仍不生效
+### 问题 5：修改配置后仍不生效
 
 **现象**：改了权限/事件，但还是收不到消息
 
