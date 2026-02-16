@@ -2,11 +2,30 @@
 
 > 记录版本发布历史和功能变更
 > 
-> 最后更新：2026-02-15
+> 最后更新：2026-02-16
 
 ---
 
 ## [Unreleased] - develop
+
+### 新增功能
+
+- **Ollama Provider 支持** - Nanodesk 层实现本地 Ollama 模型支持
+  - 新增 `nanodesk/providers/ollama_provider.py` - 专用 Ollama provider
+  - 支持通过 `provider: "ollama"` 配置使用本地模型
+  - 绕过上游 LiteLLM provider 的模型名匹配问题
+  - 推荐模型：**qwen2.5:3b**（中文好，15-40秒响应）
+  - 性能优化：支持 `OLLAMA_NUM_THREAD` 和 `OLLAMA_CONTEXT_LENGTH` 环境变量
+
+### 文档重组
+
+- **新建 `docs/setup/` 目录** - 配置文档集中管理
+  - `setup/README.md` - 配置总览和快速导航
+  - `setup/OLLAMA.md` - Ollama 完整配置指南（含性能测试数据）
+  - `setup/OLLAMA_INSTALL.md` - Ollama Windows 安装指南
+  - `setup/FEISHU.md` - 飞书机器人配置
+  - `setup/CONFIGURATION.md` - 通用配置参考
+- 更新 `docs/README.md` - 添加 setup/ 目录导航
 
 ### 修复
 
