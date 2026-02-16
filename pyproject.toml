@@ -40,6 +40,8 @@ dependencies = [
     "prompt-toolkit>=3.0.0",
     "ddgs>=3.0.0",
     "playwright>=1.40.0",
+    "mcp>=1.0.0",
+    "json-repair>=0.30.0",
 ]
 
 [project.optional-dependencies]
