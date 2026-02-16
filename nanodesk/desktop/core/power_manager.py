@@ -2,6 +2,8 @@
 
 Gateway 运行时保持系统活跃，但允许关闭显示器。
 只在接电源时阻止睡眠，保护笔记本电池。
+
+自动配置 Modern Standby (S0) 设置，无需用户手动调整电源计划。
 """
 
 import atexit
@@ -10,8 +12,12 @@ import threading
 from dataclasses import dataclass
 from loguru import logger
 
+
+
 ES_CONTINUOUS = 0x80000000
 ES_SYSTEM_REQUIRED = 0x00000001
+ES_DISPLAY_REQUIRED = 0x00000002
+ES_AWAYMODE_REQUIRED = 0x00000040
 
 
 @dataclass
@@ -39,7 +45,11 @@ class _SYSTEM_POWER_STATUS(ctypes.Structure):
 _last_ac_status: bool | None = None
 _is_preventing: bool = False
 _monitor_started: bool = False
+_refresh_timer: threading.Timer | None = None
 _lock = threading.Lock()
+
+# 定期刷新间隔（秒）
+REFRESH_INTERVAL = 60
 
 
 def get_power_status() -> PowerStatus:
@@ -79,10 +89,46 @@ def should_prevent_sleep() -> tuple[bool, str]:
     return True, "On AC power, preventing sleep to keep Gateway running"
 
 
+def _start_refresh_timer():
+    """Start timer to periodically refresh sleep prevention"""
+    global _refresh_timer
+    
+    def refresh():
+        if _is_preventing:
+            try:
+                ctypes.windll.kernel32.SetThreadExecutionState(
+                    ES_CONTINUOUS | ES_SYSTEM_REQUIRED
+                )
+                logger.debug("[Power] Refreshed sleep prevention")
+                _start_refresh_timer()  # Schedule next refresh
+            except Exception as e:
+                logger.error(f"[Power] Failed to refresh: {e}")
+    
+    _refresh_timer = threading.Timer(REFRESH_INTERVAL, refresh)
+    _refresh_timer.daemon = True
+    _refresh_timer.start()
+
+
+def _stop_refresh_timer():
+    """Stop the refresh timer"""
+    global _refresh_timer
+    if _refresh_timer:
+        _refresh_timer.cancel()
+        _refresh_timer = None
+
+
 def prevent_sleep() -> bool:
     """
     Try to prevent system sleep (thread-safe)
 
+    Uses SetThreadExecutionState to prevent sleep while application is running.
+    This is application-level only and does NOT modify system power settings.
+    
+    Note: On Modern Standby (S0) systems, this may not be sufficient if the
+    system is configured to aggressively suspend applications. Users can
+    manually adjust power settings or run Nanodesk with administrator rights
+    for better control.
+    
     Returns:
         Whether successfully prevented
     """
@@ -104,10 +150,13 @@ def prevent_sleep() -> bool:
             return True
 
         try:
+            # Use ES_SYSTEM_REQUIRED to prevent sleep
+            # Note: ES_AWAYMODE_REQUIRED is for media playback scenarios, not needed here
             ctypes.windll.kernel32.SetThreadExecutionState(
                 ES_CONTINUOUS | ES_SYSTEM_REQUIRED
             )
             _is_preventing = True
+            _start_refresh_timer()  # Start periodic refresh
             logger.info(f"[Power] {reason}")
             return True
         except Exception as e:
@@ -124,6 +173,7 @@ def allow_sleep():
             return
 
         try:
+            _stop_refresh_timer()  # Stop refresh timer
             ctypes.windll.kernel32.SetThreadExecutionState(ES_CONTINUOUS)
             _is_preventing = False
             logger.info("[Power] System sleep allowed")

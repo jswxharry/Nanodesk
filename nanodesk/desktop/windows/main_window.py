@@ -1,5 +1,6 @@
 """Main window for Nanodesk Desktop."""
 
+import sys
 from pathlib import Path
 
 from PySide6.QtCore import Slot
@@ -303,6 +304,20 @@ class MainWindow(QMainWindow):
         """Start gateway."""
         self.status_bar.showMessage("正在启动 Gateway...")
 
+        # Prevent system sleep on Windows (main GUI process)
+        if sys.platform == "win32":
+            try:
+                from nanodesk.desktop.core.power_manager import (
+                    prevent_sleep,
+                    start_power_monitor,
+                )
+
+                prevent_sleep()
+                start_power_monitor()
+            except Exception as e:
+                # Non-critical, log and continue
+                self.log_handler.write(f"Power management init warning: {e}", "WARN")
+
         # Start gateway (synchronous, runs in background thread)
         result = self.process_manager.start_gateway()
         if not result:
@@ -312,6 +327,16 @@ class MainWindow(QMainWindow):
     def _on_stop(self):
         """Stop gateway."""
         self.status_bar.showMessage("正在停止 Gateway...")
+
+        # Allow system sleep on Windows
+        if sys.platform == "win32":
+            try:
+                from nanodesk.desktop.core.power_manager import allow_sleep
+
+                allow_sleep()
+            except Exception:
+                pass  # Ignore errors on stop
+
         self.process_manager.stop_gateway()
 
     @Slot()
