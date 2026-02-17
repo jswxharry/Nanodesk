@@ -32,13 +32,13 @@
 - ✅ `nanobot/` - Bug 修复、通用功能、性能优化
 - ✅ `nanodesk/` - Windows 特定功能、个人工作流、实验性代码
 
-详细判断标准参见 [CONTRIBUTING.md](./CODE_LOCATION.md)。
+详细判断标准参见 [CONTRIBUTING.md](./CONTRIBUTING.md)。
 
 ---
 
 ## 二、提交规范
 
-**详见**：[COMMIT_RULES.md](./COMMIT_RULES.md)
+**详见**：[CONTRIBUTING.md](./CONTRIBUTING.md)
 
 **常用前缀**：
 | 前缀 | 用途 | 示例 |
@@ -123,6 +123,5 @@ def process(text: str | None) -> list[str]:
 ## 参考
 
 - [BRANCHING.md](./BRANCHING.md) - Git 分支管理
-- [COMMIT_RULES.md](./COMMIT_RULES.md) - 提交规范
-- [CODE_LOCATION.md](./CODE_LOCATION.md) - 代码归属判断
+- [CONTRIBUTING.md](./CONTRIBUTING.md) - 提交规范
 - [ARCHITECTURE.md](./ARCHITECTURE.md) - 项目架构
